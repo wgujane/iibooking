@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ✅ 防護一：防止搜尋引擎收錄此內部系統 -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>來來來!來預約115年系統盤點</title>
+    
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        select { appearance: none; }
+        .hidden-el { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="min-h-screen p-4 md:p-8 max-w-6xl mx-auto space-y-6">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold flex items-center gap-2">
+                    <i data-lucide="calendar" class="text-blue-600"></i> 來來來!來預約115年系統盤點
+                </h1>
+                <p id="status-text" class="text-sm mt-1 font-medium text-amber-500 flex items-center gap-1">
+                    🟡 載入中...
+                </p>
+            </div>
+            <!-- 匯出與同步按鈕 -->
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <button id="btn-sync" class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm font-bold border border-blue-100 hover:bg-blue-100 transition-all">
+                    <i data-lucide="refresh-cw" id="sync-icon" class="w-4 h-4"></i> 雲端同步
+                </button>
+                <button id="btn-export-unbooked" class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-amber-600 transition-all shadow-md">
+                    <i data-lucide="file-minus" class="w-4 h-4"></i> 匯出未預約
+                </button>
+                <!-- ✅ 調整：將匯出名單改為「匯出已預約」 -->
+                <button id="btn-export" class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-700 transition-all shadow-md">
+                    <i data-lucide="download" class="w-4 h-4"></i> 匯出已預約
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 左側表單 -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 sticky top-6">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 border-b pb-3">
+                        <i data-lucide="plus-circle" class="text-blue-600 w-5 h-5"></i> 新增預約
+                    </h2>
+                    <form id="booking-form" class="space-y-4">
+                        
+                        <!-- 搜尋與選擇系統 Combo Box -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1 flex items-center gap-1">
+                                <i data-lucide="search" class="w-4 h-4 text-blue-500"></i> 搜尋或選擇系統 *
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="input-system" required autocomplete="off" placeholder="👉 點擊輸入關鍵字或選擇..." 
+                                    class="w-full pl-10 pr-10 py-2.5 bg-blue-50/50 border-2 border-blue-200 rounded-lg text-sm font-medium text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white outline-none transition-all placeholder-slate-400 cursor-text">
+                                <i data-lucide="monitor" class="absolute left-3 top-3 text-blue-500 w-5 h-5"></i>
+                                <i data-lucide="chevron-down" class="absolute right-3 top-3 text-slate-400 w-5 h-5 pointer-events-none"></i>
+                                
+                                <ul id="search-suggestions" class="absolute z-50 w-full bg-white border border-slate-200 rounded-lg shadow-xl mt-1 max-h-60 overflow-y-auto hidden-el custom-scrollbar">
+                                    <!-- JS 動態產生 -->
+                                </ul>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1 pl-1">💡 提示：可直接輸入系統名稱、單位或承辦人。</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                <label class="block text-[10px] font-bold text-slate-400 mb-0.5">單位</label>
+                                <input type="text" id="input-unit" readonly placeholder="自動帶入" class="w-full bg-transparent text-xs font-bold text-slate-600 outline-none cursor-not-allowed truncate">
+                            </div>
+                            <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                <label class="block text-[10px] font-bold text-slate-400 mb-0.5">承辦人</label>
+                                <input type="text" id="input-contact" readonly placeholder="自動帶入" class="w-full bg-transparent text-xs font-bold text-slate-600 outline-none cursor-not-allowed truncate">
+                            </div>
+                        </div>
+
+                        <!-- 狀態選項區塊 (提前繳回 / 隨同盤點) -->
+                        <div class="flex flex-col gap-2 mt-3">
+                            <div class="flex items-start gap-2 bg-emerald-50/80 p-2.5 rounded-lg border border-emerald-200 transition-colors hover:bg-emerald-50">
+                                <input type="checkbox" id="check-early-complete" class="mt-0.5 w-4 h-4 text-emerald-600 bg-white border-emerald-300 rounded focus:ring-emerald-500 cursor-pointer">
+                                <label for="check-early-complete" class="text-xs font-bold text-emerald-700 cursor-pointer select-none leading-tight">
+                                    此系統已提前繳回，直接結案<br>
+                                    <span class="text-[10px] text-emerald-600/80 font-normal">免選時間，自動標記繳回。</span>
+                                </label>
+                            </div>
+                            <div class="flex items-start gap-2 bg-blue-50/80 p-2.5 rounded-lg border border-blue-200 transition-colors hover:bg-blue-50">
+                                <input type="checkbox" id="check-joint-booking" class="mt-0.5 w-4 h-4 text-blue-600 bg-white border-blue-300 rounded focus:ring-blue-500 cursor-pointer">
+                                <label for="check-joint-booking" class="text-xs font-bold text-blue-700 cursor-pointer select-none leading-tight">
+                                    與其他系統隨同盤點 (候補)<br>
+                                    <span class="text-[10px] text-blue-600/80 font-normal">免選時間，適用於同一承辦人有多個系統。</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mt-1">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">日期 *</label>
+                                <select id="input-date" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white outline-none disabled:bg-slate-50 disabled:cursor-not-allowed">
+                                    <option value="" disabled selected>選擇日期</option>
+                                </select>
+                            </div>
+                            <div id="time-container" class="transition-opacity duration-200">
+                                <label class="block text-xs font-bold text-slate-500 mb-1">時間 *</label>
+                                <select id="input-time" required disabled class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white outline-none disabled:bg-slate-50 disabled:cursor-not-allowed">
+                                    <option value="" disabled selected>請先選日期</option>
+                                </select>
+                            </div>
+                        </div>
+                        <textarea id="input-service" rows="2" class="w-full p-3 border border-slate-200 rounded-lg text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500" placeholder="備註內容..."></textarea>
+                        <button type="submit" id="btn-submit" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                            加入名單
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 右側名單 -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden h-full flex flex-col">
+                    <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
+                        <h2 class="font-bold flex items-center gap-2">
+                            <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i> 目前名單 
+                            <span id="booking-count" class="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-bold">0</span>
+                        </h2>
+                        
+                        <div class="flex flex-wrap items-center gap-3">
+                            <div class="flex items-center gap-1.5 text-slate-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm text-xs font-medium">
+                                <i data-lucide="monitor" class="text-blue-500 w-3.5 h-3.5"></i> <span>總數: <strong id="stat-total" class="text-slate-800">0</strong></span>
+                            </div>
+                            
+                            <!-- ✅ 調整：將待預約統計區塊變成可點擊的切換按鈕 -->
+                            <button id="btn-toggle-unbooked" class="flex items-center gap-1.5 text-slate-600 bg-white hover:bg-amber-50 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-amber-300 shadow-sm text-xs font-medium transition-all cursor-pointer" title="點擊查看待預約名單">
+                                <i id="unbooked-icon" data-lucide="search" class="text-amber-500 w-3.5 h-3.5"></i> 
+                                <span id="unbooked-text">待預約:</span> 
+                                <strong id="stat-unbooked" class="text-amber-600">0</strong><span id="unbooked-suffix" class="hidden-el">)</span>
+                            </button>
+
+                            <!-- 已繳回統計區塊 -->
+                            <div class="flex items-center gap-1.5 text-slate-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm text-xs font-medium">
+                                <i data-lucide="check-circle" class="text-emerald-500 w-3.5 h-3.5"></i> <span>已繳回: <strong id="stat-completed" class="text-emerald-600">0</strong></span>
+                            </div>
+                            
+                            <!-- 篩選選單 -->
+                            <select id="filter-select" class="text-xs px-2.5 py-1.5 rounded-lg font-bold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">顯示全部名單</option>
+                                <option value="today">僅看今日</option>
+                                <optgroup label="📅 依日期查看" id="filter-date-group">
+                                    <!-- JS 動態產生 -->
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto flex-1 custom-scrollbar min-h-[400px] relative">
+                        <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 hidden-el">
+                            <i data-lucide="calendar" class="w-12 h-12 mb-2 opacity-20"></i>
+                            <span>尚未有符合的預約</span>
+                        </div>
+                        
+                        <table id="booking-table" class="w-full text-left text-sm">
+                            <thead id="booking-thead" class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-widest sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="p-4 w-[120px]">時間</th>
+                                    <th class="p-4">系統資訊</th>
+                                    <th class="p-4 hidden sm:table-cell">備註</th>
+                                    <th class="p-4 text-right">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booking-tbody">
+                                <!-- JS 動態產生 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部行事曆 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mt-6">
+            <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/80">
+                <h3 class="font-bold flex items-center gap-2">
+                    <i data-lucide="calendar" class="text-blue-600 w-5 h-5"></i> 整月盤點進度
+                </h3>
+                <div class="flex items-center gap-3 text-sm font-bold bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                    <button id="btn-prev-month" class="p-1 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <span id="calendar-title" class="min-w-[100px] text-center text-slate-700">2026 / 04月</span>
+                    <button id="btn-next-month" class="p-1 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                    <div class="w-px h-4 bg-slate-200 mx-1"></div>
+                    <button id="btn-today-month" class="text-blue-600 hover:bg-blue-50 px-2 py-1 rounded transition-colors">回到本月</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <div class="min-w-[700px]">
+                    <div class="grid grid-cols-7 border-b text-center text-xs font-black text-slate-400 bg-slate-50/50">
+                        <div class="py-2.5">日</div><div class="py-2.5">一</div><div class="py-2.5">二</div>
+                        <div class="py-2.5">三</div><div class="py-2.5">四</div><div class="py-2.5">五</div><div class="py-2.5">六</div>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200">
+                        <!-- JS 動態產生 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast 提示框 -->
+        <div id="toast-container" class="fixed bottom-6 right-6 z-50 hidden-el animate-fade-in-up">
+            <div id="toast-content" class="px-6 py-3 rounded-xl shadow-xl text-white text-sm font-bold flex items-center gap-2 bg-slate-800">
+                <i id="toast-icon" data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 
+                <span id="toast-msg">訊息</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 設定區 ---
+        // 請確保此網址是你「重新部署」後的最新網址
+        const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbxRA_bla5U3RTfc-Jqlz-zQXcM-ESRrozvilddaIN0yTObElQaJG0KibC-oVlX8m40F/exec";
+
+        // --- 全域狀態 ---
+        let bookings = [];
+        let availableSlots = [];
+        let systemMapping = {};
+        let currentAvailableSystems = []; 
+        let isLoading = false;
+        let currentFilter = 'all'; 
+        let isViewingUnbooked = false; // ✅ 新增：控制是否正在查看待預約
+        let currentCalendarDate = new Date();
+
+        const getTodayStr = () => {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        };
+        const getCurrentTimeStr = () => {
+            const d = new Date();
+            return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        };
+
+        // --- DOM 元素取得 ---
+        const elSyncBtn = document.getElementById('btn-sync');
+        const elSyncIcon = document.getElementById('sync-icon');
+        const elExportBtn = document.getElementById('btn-export');
+        const elExportUnbookedBtn = document.getElementById('btn-export-unbooked');
+        const elStatusText = document.getElementById('status-text');
+        
+        const elForm = document.getElementById('booking-form');
+        const elInputSystem = document.getElementById('input-system');
+        const elSearchSuggestions = document.getElementById('search-suggestions');
+        const elInputUnit = document.getElementById('input-unit');
+        const elInputContact = document.getElementById('input-contact');
+        const elInputDate = document.getElementById('input-date');
+        const elInputTime = document.getElementById('input-time');
+        const elInputService = document.getElementById('input-service');
+        const elBtnSubmit = document.getElementById('btn-submit');
+        
+        const elCheckEarlyComplete = document.getElementById('check-early-complete');
+        const elCheckJointBooking = document.getElementById('check-joint-booking'); 
+        const elTimeContainer = document.getElementById('time-container');
+
+        const elBookingTbody = document.getElementById('booking-tbody');
+        const elEmptyState = document.getElementById('empty-state');
+        const elBookingTable = document.getElementById('booking-table');
+        const elBookingThead = document.getElementById('booking-thead'); 
+        const elBookingCount = document.getElementById('booking-count');
+        const elFilterSelect = document.getElementById('filter-select'); 
+        const elFilterDateGroup = document.getElementById('filter-date-group'); 
+        
+        const elToggleUnbookedBtn = document.getElementById('btn-toggle-unbooked'); 
+        
+        const elStatTotal = document.getElementById('stat-total');
+        const elStatUnbooked = document.getElementById('stat-unbooked');
+        const elStatCompleted = document.getElementById('stat-completed'); 
+
+        const elCalendarGrid = document.getElementById('calendar-grid');
+        const elCalendarTitle = document.getElementById('calendar-title');
+
+        const elToastContainer = document.getElementById('toast-container');
+        const elToastMsg = document.getElementById('toast-msg');
+        const elToastContent = document.getElementById('toast-content');
+
+        const sortBookings = (list) => {
+            return list.sort((a, b) => {
+                if (a.date !== b.date) return a.date.localeCompare(b.date);
+                const getSortWeight = (time) => {
+                    if (time === '提前結案') return 3;
+                    if (time === '隨同盤點') return 2;
+                    return 1; 
+                };
+                const weightA = getSortWeight(a.time);
+                const weightB = getSortWeight(b.time);
+                if (weightA !== weightB) return weightA - weightB;
+                return (a.time || "").localeCompare(b.time || "");
+            });
+        };
+
+        // --- 初始化與資料拉取 ---
+        async function fetchCloudData() {
+            if (!GOOGLE_API_URL) return;
+            
+            setLoadingState(true);
+            try {
+                const response = await fetch(GOOGLE_API_URL, { redirect: "follow" });
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("text/html")) {
+                    throw new Error("權限錯誤：被 Google 擋下了，請確認 Apps Script 是否設為「所有人 (Anyone)」");
+                }
+
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    throw new Error("資料格式異常：Google 試算表內容可能發生錯誤");
+                }
+                
+                if (result.status === 'success') {
+                    bookings = result.bookings || [];
+                    availableSlots = result.slots || [];
+                    
+                    const fetchedUnits = result.units || [];
+                    systemMapping = {};
+                    
+                    if (Array.isArray(fetchedUnits)) {
+                        fetchedUnits.forEach(item => {
+                            if (item.system) {
+                                systemMapping[item.system] = {
+                                    unit: item.unit || '',
+                                    contactPerson: item.contactPerson || '',
+                                    folderUrl: item.folderUrl || '',
+                                    category: item.category || ''
+                                };
+                            }
+                        });
+                    } else {
+                        Object.keys(fetchedUnits).forEach(key => {
+                            if (key !== 'system') {
+                                systemMapping[key] = {
+                                    unit: fetchedUnits[key].system || '',
+                                    contactPerson: fetchedUnits[key].contactPerson || '',
+                                    folderUrl: fetchedUnits[key].folderUrl || '',
+                                    category: fetchedUnits[key].category || ''
+                                };
+                            }
+                        });
+                    }
+                    
+                    elStatusText.innerHTML = `<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> <span class="text-emerald-600">已連線至雲端資料庫</span>`;
+                    showToast('已完成雲端同步！');
+                    updateAllUI();
+                } else {
+                    throw new Error(result.message || "未知的雲端錯誤");
+                }
+            } catch (err) {
+                console.error("連線錯誤詳細資訊:", err);
+                elStatusText.innerHTML = `<span class="text-red-500">❌ 連線失敗 (${err.message})</span>`;
+                showToast(err.message, 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // --- 介面更新邏輯 ---
+        function updateAllUI() {
+            updateStats();
+            updateAvailableSystems();
+            updateDateSelect();
+            updateFilterOptions(); 
+            renderBookingList();
+            renderCalendar();
+            lucide.createIcons();
+        }
+
+        function setLoadingState(loading) {
+            isLoading = loading;
+            elSyncBtn.disabled = loading;
+            elInputSystem.disabled = loading;
+            if (loading) {
+                elSyncIcon.classList.add('animate-spin');
+                elInputSystem.placeholder = "資料同步中...";
+            } else {
+                elSyncIcon.classList.remove('animate-spin');
+                elInputSystem.placeholder = "👉 點擊輸入關鍵字或選擇...";
+            }
+        }
+
+        function updateStats() {
+            const totalSystemsCount = Object.keys(systemMapping).length;
+            const bookedSystemsCount = new Set(bookings.map(b => b.system).filter(sys => systemMapping[sys])).size;
+            const unbookedSystemsCount = Math.max(0, totalSystemsCount - bookedSystemsCount);
+            
+            const completedCount = bookings.filter(b => b.completed === 'true' || b.completed === true).length;
+            
+            elStatTotal.textContent = totalSystemsCount;
+            elStatUnbooked.textContent = unbookedSystemsCount;
+            elStatCompleted.textContent = completedCount; 
+        }
+
+        function updateAvailableSystems() {
+            const bookedSystems = bookings.map(b => b.system);
+            currentAvailableSystems = Object.keys(systemMapping).filter(sys => !bookedSystems.includes(sys));
+
+            const currentVal = elInputSystem.value;
+            if (currentVal && !currentAvailableSystems.includes(currentVal)) {
+                elInputSystem.value = "";
+                elInputUnit.value = "";
+                elInputContact.value = "";
+            }
+        }
+
+        function renderSearchSuggestions(keyword = '') {
+            elSearchSuggestions.innerHTML = '';
+            
+            if (currentAvailableSystems.length === 0) {
+                elSearchSuggestions.innerHTML = '<li class="p-3 text-sm font-bold text-emerald-600 text-center">🎉 所有系統皆已預約完畢</li>';
+                elSearchSuggestions.classList.remove('hidden-el');
+                return;
+            }
+
+            const lowerKw = keyword.toLowerCase();
+            
+            const matches = currentAvailableSystems.filter(sys => {
+                const unit = systemMapping[sys].unit || '';
+                const contact = systemMapping[sys].contactPerson || '';
+                const category = systemMapping[sys].category || '';
+                return sys.toLowerCase().includes(lowerKw) || 
+                       unit.toLowerCase().includes(lowerKw) || 
+                       contact.toLowerCase().includes(lowerKw) ||
+                       category.toLowerCase().includes(lowerKw);
+            });
+
+            if (matches.length === 0) {
+                elSearchSuggestions.innerHTML = '<li class="p-3 text-sm text-slate-500 text-center">找不到符合的系統</li>';
+                elSearchSuggestions.classList.remove('hidden-el');
+                return;
+            }
+
+            matches.forEach(sys => {
+                const unit = systemMapping[sys].unit || '無單位';
+                const contact = systemMapping[sys].contactPerson || '無承辦人';
+                const category = systemMapping[sys].category || '';
+                const categoryHtml = category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 ml-2 font-bold">${category}</span>` : '';
+                
+                const li = document.createElement('li');
+                li.className = 'px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-slate-100 last:border-0 transition-colors';
+                li.innerHTML = `
+                    <div class="font-bold text-blue-700 text-sm flex items-center">${sys} ${categoryHtml}</div>
+                    <div class="text-xs font-bold text-slate-500 mt-0.5"><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${unit} &nbsp;|&nbsp; <i data-lucide="contact" class="w-3 h-3 inline"></i> ${contact}</div>
+                `;
+                
+                li.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    elInputSystem.value = sys;
+                    elInputUnit.value = systemMapping[sys].unit;
+                    elInputContact.value = systemMapping[sys].contactPerson;
+                    elSearchSuggestions.classList.add('hidden-el');
+                });
+                elSearchSuggestions.appendChild(li);
+            });
+            
+            lucide.createIcons();
+            elSearchSuggestions.classList.remove('hidden-el');
+        }
+
+        function updateDateSelect() {
+            const todayStr = getTodayStr();
+            const currentTimeStr = getCurrentTimeStr();
+            const currentVal = elInputDate.value;
+            
+            // ✅ 新增：判斷是否勾選了特殊狀態
+            const isSpecial = elCheckEarlyComplete.checked || elCheckJointBooking.checked;
+            
+            const uniqueDates = [...new Set(availableSlots.map(s => s.date))];
+            const validDates = uniqueDates.filter(d => {
+                if (d < todayStr) return false;
+                
+                // ✅ 如果是特殊狀態(提前繳回/隨同盤點)，直接開放該日期，不檢查時段是否額滿
+                if (isSpecial) return true;
+                
+                const timesForDate = availableSlots.filter(s => s.date === d).map(s => s.time);
+                const bookedTimes = bookings.filter(b => b.date === d).map(b => b.time);
+                
+                const validTimes = timesForDate.filter(t => (d === todayStr ? t > currentTimeStr : true));
+                return validTimes.some(t => !bookedTimes.includes(t));
+            }).sort();
+
+            elInputDate.innerHTML = '<option value="" disabled selected>選擇日期</option>';
+            validDates.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d === todayStr ? '今天 (' + d + ')' : d;
+                elInputDate.appendChild(opt);
+            });
+
+            if (validDates.includes(currentVal)) {
+                elInputDate.value = currentVal;
+                updateTimeSelect();
+            } else {
+                elInputDate.value = "";
+                elInputTime.innerHTML = '<option value="" disabled selected>請先選日期</option>';
+                elInputTime.disabled = true;
+            }
+        }
+
+        function updateTimeSelect() {
+            const selectedDate = elInputDate.value;
+            if (!selectedDate) {
+                elInputTime.innerHTML = '<option value="" disabled selected>請先選日期</option>';
+                elInputTime.disabled = true;
+                return;
+            }
+
+            const todayStr = getTodayStr();
+            const currentTimeStr = getCurrentTimeStr();
+            const currentVal = elInputTime.value;
+
+            const validTimes = availableSlots
+                .filter(s => s.date === selectedDate)
+                .map(s => s.time)
+                .filter(t => {
+                    const isBooked = bookings.some(b => b.date === selectedDate && b.time === t);
+                    const isPastTime = (selectedDate === todayStr && t <= currentTimeStr);
+                    return !isBooked && !isPastTime;
+                }).sort();
+
+            elInputTime.innerHTML = '<option value="" disabled selected>選擇時間</option>';
+            validTimes.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                elInputTime.appendChild(opt);
+            });
+
+            elInputTime.disabled = validTimes.length === 0;
+            if (validTimes.includes(currentVal)) elInputTime.value = currentVal;
+            else elInputTime.value = "";
+        }
+
+        function updateFilterOptions() {
+            const uniqueDates = [...new Set(bookings.map(b => b.date))].sort();
+            
+            if (currentFilter !== 'all' && currentFilter !== 'today') {
+                if (!uniqueDates.includes(currentFilter)) {
+                    currentFilter = 'all'; 
+                }
+            }
+
+            let html = '';
+            uniqueDates.forEach(d => {
+                html += `<option value="${d}">${d}</option>`;
+            });
+            elFilterDateGroup.innerHTML = html;
+            elFilterSelect.value = currentFilter;
+        }
+
+        function getGCalUrl(b) {
+            const start = b.date.replace(/-/g, '') + 'T' + b.time.replace(':', '') + '00';
+            const title = encodeURIComponent(`115年系統盤點：${b.system}`);
+            const details = encodeURIComponent(`單位：${b.unit}\n承辦人：${b.contactPerson}\n備註：${b.service || '無'}`);
+            return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${start}&details=${details}`;
+        }
+        
+        function updateUnbookedBtnUI() {
+            const icon = document.getElementById('unbooked-icon');
+            const text = document.getElementById('unbooked-text');
+            const stat = document.getElementById('stat-unbooked');
+            const suffix = document.getElementById('unbooked-suffix');
+
+            if (isViewingUnbooked) {
+                elToggleUnbookedBtn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg shadow-md text-xs font-medium transition-all cursor-pointer bg-amber-500 text-white border border-amber-600 hover:bg-amber-600';
+                icon.setAttribute('data-lucide', 'arrow-left');
+                icon.className = 'text-white w-3.5 h-3.5';
+                text.textContent = '返回名單 (待:';
+                stat.className = 'text-white font-bold';
+                suffix.classList.remove('hidden-el');
+            } else {
+                elToggleUnbookedBtn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg shadow-sm text-xs font-medium transition-all cursor-pointer text-slate-600 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-300';
+                icon.setAttribute('data-lucide', 'search');
+                icon.className = 'text-amber-500 w-3.5 h-3.5';
+                text.textContent = '待預約:';
+                stat.className = 'text-amber-600 font-bold';
+                suffix.classList.add('hidden-el');
+            }
+            lucide.createIcons();
+        }
+
+        function renderBookingList() {
+            const todayStr = getTodayStr();
+
+            if (isViewingUnbooked) {
+                const bookedSystems = bookings.map(b => b.system);
+                const unbookedSystemsKeys = Object.keys(systemMapping).filter(sys => !bookedSystems.includes(sys));
+
+                elBookingCount.textContent = unbookedSystemsKeys.length;
+
+                if (unbookedSystemsKeys.length === 0) {
+                    elEmptyState.innerHTML = `<i data-lucide="check-circle" class="w-12 h-12 mb-2 text-emerald-400 opacity-50"></i><span class="font-bold text-slate-500">太棒了！所有系統皆已預約完畢</span>`;
+                    elEmptyState.classList.remove('hidden-el');
+                    elBookingTable.classList.add('hidden-el');
+                } else {
+                    elEmptyState.classList.add('hidden-el');
+                    elBookingTable.classList.remove('hidden-el');
+
+                    elBookingThead.innerHTML = `
+                        <tr>
+                            <th class="p-4 w-[100px]">狀態</th>
+                            <th class="p-4">系統資訊</th>
+                            <th class="p-4 hidden sm:table-cell">備註</th>
+                            <th class="p-4 text-right">操作</th>
+                        </tr>
+                    `;
+
+                    elBookingTbody.innerHTML = unbookedSystemsKeys.map(sys => {
+                        const sysData = systemMapping[sys];
+                        const categoryTag = sysData.category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 font-bold ml-1">${sysData.category}</span>` : '';
+                        
+                        return `
+                            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <td class="p-4 align-top w-[100px]">
+                                    <span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-[10px] font-bold">待預約</span>
+                                </td>
+                                <td class="p-4 align-top">
+                                    <div class="font-bold text-slate-700 text-base flex flex-wrap items-center gap-2">
+                                        ${sys} ${categoryTag}
+                                    </div>
+                                    <div class="text-xs text-slate-500 mt-1 flex flex-col gap-0.5">
+                                        <span><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${sysData.unit || '-'}</span>
+                                        <span><i data-lucide="contact" class="w-3 h-3 inline"></i> ${sysData.contactPerson || '-'}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 align-top text-slate-400 text-xs hidden sm:table-cell">
+                                    尚未安排盤點
+                                </td>
+                                <td class="p-4 align-top text-right">
+                                    <button onclick="bookSystem('${sys}')" class="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-colors text-xs font-bold inline-flex items-center gap-1 shadow-sm">
+                                        <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> 安排預約
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+                lucide.createIcons();
+                return; 
+            }
+
+            elEmptyState.innerHTML = `<i data-lucide="calendar" class="w-12 h-12 mb-2 opacity-20"></i><span>尚未有符合的預約</span>`;
+            elBookingThead.innerHTML = `
+                <tr>
+                    <th class="p-4 w-[120px]">時間</th>
+                    <th class="p-4">系統資訊</th>
+                    <th class="p-4 hidden sm:table-cell">備註</th>
+                    <th class="p-4 text-right">操作</th>
+                </tr>
+            `;
+
+            let filtered = bookings.slice(); 
+            
+            if (currentFilter === 'today') {
+                filtered = filtered.filter(b => b.date === todayStr);
+            } else if (currentFilter !== 'all') {
+                filtered = filtered.filter(b => b.date === currentFilter); 
+            }
+            
+            sortBookings(filtered);
+
+            elBookingCount.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                elEmptyState.classList.remove('hidden-el');
+                elBookingTable.classList.add('hidden-el');
+            } else {
+                elEmptyState.classList.add('hidden-el');
+                elBookingTable.classList.remove('hidden-el');
+                
+                elBookingTbody.innerHTML = filtered.map(b => {
+                    const isToday = b.date === todayStr;
+                    const isCompleted = b.completed === 'true' || b.completed === true; 
+                    
+                    const category = systemMapping[b.system]?.category || '';
+                    const categoryTag = category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 font-bold ml-1">${category}</span>` : '';
+
+                    const folderBtn = (systemMapping[b.system] && systemMapping[b.system].folderUrl && systemMapping[b.system].folderUrl !== "找不到對應資料夾") 
+                        ? `<a href="${systemMapping[b.system].folderUrl}" target="_blank" class="p-1.5 text-blue-500 hover:bg-blue-50 rounded inline-flex" title="開啟資料夾"><i data-lucide="folder-open" class="w-4 h-4"></i></a>` 
+                        : '';
+                        
+                    const timeDisplay = ['提前結案', '隨同盤點'].includes(b.time) 
+                        ? `<span class="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-bold">${b.time}</span>`
+                        : `${b.time}`;
+
+                    return `
+                        <tr class="border-b border-slate-50 transition-colors ${isCompleted ? 'bg-emerald-50/40' : 'hover:bg-slate-50'}">
+                            <td class="p-4 align-top w-[120px]">
+                                <div class="font-bold ${isToday && !isCompleted ? 'text-blue-600' : 'text-slate-700'}">${isToday ? '今日' : b.date}</div>
+                                <div class="text-xs text-slate-400 font-medium flex items-center gap-1 mt-1.5">
+                                    ${!['提前結案', '隨同盤點'].includes(b.time) ? '<i data-lucide="clock" class="w-3 h-3"></i>' : ''} ${timeDisplay}
+                                </div>
+                            </td>
+                            <td class="p-4 align-top">
+                                <div class="font-bold text-slate-700 text-base flex flex-wrap items-center gap-2">
+                                    ${b.system}
+                                    ${categoryTag}
+                                    ${isCompleted ? '<span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded-full font-bold">已繳回</span>' : ''}
+                                </div>
+                                <div class="text-xs text-slate-500 mt-1 flex flex-col gap-0.5">
+                                    <span><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${b.unit || '-'}</span>
+                                    <span><i data-lucide="contact" class="w-3 h-3 inline"></i> ${b.contactPerson || '-'}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 align-top text-slate-500 text-xs hidden sm:table-cell">
+                                <div class="truncate max-w-[150px]" title="${b.service || ''}">${b.service || '-'}</div>
+                            </td>
+                            <td class="p-4 align-top text-right">
+                                <div class="flex justify-end gap-1">
+                                    ${folderBtn}
+                                    <button onclick="toggleCompleted('${b.id}')" class="p-1.5 ${isCompleted ? 'text-emerald-600 bg-emerald-100 hover:bg-emerald-200' : 'text-slate-300 hover:text-emerald-500 hover:bg-emerald-50'} rounded inline-flex transition-colors" title="${isCompleted ? '取消繳回狀態' : '標記為已繳回'}">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                    </button>
+                                    ${!['提前結案', '隨同盤點'].includes(b.time) ? `
+                                    <a href="${getGCalUrl(b)}" target="_blank" class="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded inline-flex" title="加入行事曆">
+                                        <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                                    </a>
+                                    ` : ''}
+                                    <button onclick="deleteBooking('${b.id}')" class="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded inline-flex" title="刪除">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const todayStr = getTodayStr();
+            
+            const monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+            elCalendarTitle.textContent = `${year} / ${monthNames[month]}`;
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay();
+
+            let html = '';
+            
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div class="bg-slate-50/50 min-h-[100px]"></div>`;
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isToday = dateStr === todayStr;
+                
+                const dayBookings = bookings.filter(b => b.date === dateStr);
+                sortBookings(dayBookings);
+
+                let bookingsHtml = dayBookings.map(b => {
+                    const isSpecial = ['提前結案', '隨同盤點'].includes(b.time);
+                    const timeLabel = isSpecial ? `<span class="bg-white/50 px-1 rounded mr-1">${b.time}</span>` : `<span class="font-bold opacity-75">${b.time}</span>`;
+                    
+                    return `
+                    <div class="text-[10px] ${isSpecial ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-blue-100 text-blue-800 border-blue-200'} p-1 rounded truncate mb-1 cursor-default border" title="${b.time} ${b.system}">
+                        ${timeLabel} ${b.system}
+                    </div>
+                    `;
+                }).join('');
+
+                html += `
+                    <div class="min-h-[100px] p-2 bg-white flex flex-col ${isToday ? 'bg-blue-50/40' : ''}">
+                        <div class="text-right text-xs font-bold mb-1">
+                            <span class="${isToday ? 'bg-blue-600 text-white rounded-full px-1.5 py-0.5 shadow-sm' : 'text-slate-400'}">${d}</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto max-h-[75px] custom-scrollbar">
+                            ${bookingsHtml}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const totalCells = firstDay + daysInMonth;
+            const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            for (let i = 0; i < remaining; i++) {
+                html += `<div class="bg-slate-50/50 min-h-[100px]"></div>`;
+            }
+
+            elCalendarGrid.innerHTML = html;
+        }
+
+        // --- 事件綁定 ---
+        
+        elInputSystem.addEventListener('focus', () => renderSearchSuggestions(elInputSystem.value));
+        elInputSystem.addEventListener('input', (e) => renderSearchSuggestions(e.target.value));
+        elInputSystem.addEventListener('blur', () => {
+            setTimeout(() => {
+                elSearchSuggestions.classList.add('hidden-el');
+                
+                const val = elInputSystem.value;
+                if (val) {
+                    if (currentAvailableSystems.includes(val)) {
+                        elInputUnit.value = systemMapping[val].unit;
+                        elInputContact.value = systemMapping[val].contactPerson;
+                    } else {
+                        elInputSystem.value = "";
+                        elInputUnit.value = "";
+                        elInputContact.value = "";
+                        showToast('請點選清單中正確的系統', 'error');
+                    }
+                }
+            }, 250); 
+        });
+
+        elInputDate.addEventListener('change', () => {
+            elInputTime.value = ""; 
+            updateTimeSelect();
+        });
+
+        elToggleUnbookedBtn.addEventListener('click', () => {
+            isViewingUnbooked = !isViewingUnbooked;
+            updateUnbookedBtnUI();
+            renderBookingList();
+        });
+
+        elFilterSelect.addEventListener('change', (e) => {
+            if (isViewingUnbooked) {
+                isViewingUnbooked = false;
+                updateUnbookedBtnUI();
+            }
+            currentFilter = e.target.value;
+            renderBookingList();
+        });
+
+        document.getElementById('btn-prev-month').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        });
+        document.getElementById('btn-next-month').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        });
+        document.getElementById('btn-today-month').addEventListener('click', () => {
+            currentCalendarDate = new Date();
+            renderCalendar();
+        });
+
+        function updateTimeContainerState() {
+            const isSpecial = elCheckEarlyComplete.checked || elCheckJointBooking.checked;
+            if (isSpecial) {
+                elTimeContainer.classList.add('opacity-40', 'pointer-events-none');
+                elInputTime.removeAttribute('required');
+            } else {
+                elTimeContainer.classList.remove('opacity-40', 'pointer-events-none');
+                elInputTime.setAttribute('required', 'true');
+            }
+        }
+
+        elCheckEarlyComplete.addEventListener('change', (e) => {
+            if (e.target.checked) elCheckJointBooking.checked = false; 
+            updateTimeContainerState();
+            updateDateSelect(); // ✅ 新增：勾選時重新計算可用日期
+        });
+
+        elCheckJointBooking.addEventListener('change', (e) => {
+            if (e.target.checked) elCheckEarlyComplete.checked = false; 
+            updateTimeContainerState();
+            updateDateSelect(); // ✅ 新增：勾選時重新計算可用日期
+        });
+
+        elSyncBtn.addEventListener('click', fetchCloudData);
+
+        elExportUnbookedBtn.addEventListener('click', () => {
+            const bookedSystems = bookings.map(b => b.system);
+            const unbookedSystemsKeys = Object.keys(systemMapping).filter(sys => !bookedSystems.includes(sys));
+
+            if (unbookedSystemsKeys.length === 0) return showToast('恭喜！所有系統皆已預約完畢！', 'success');
+
+            const headers = ['分類', '單位', '系統', '承辦人']; 
+            const rows = unbookedSystemsKeys.map(sys => {
+                const sysData = systemMapping[sys];
+                return [
+                    `"${(sysData.category || '').replace(/"/g, '""')}"`,
+                    `"${(sysData.unit || '').replace(/"/g, '""')}"`, 
+                    `"${(sys || '').replace(/"/g, '""')}"`, 
+                    `"${(sysData.contactPerson || '').replace(/"/g, '""')}"`
+                ];
+            });
+
+            const content = "\uFEFF" + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `未預約名單_${getTodayStr()}.csv`;
+            link.click();
+        });
+
+        elExportBtn.addEventListener('click', () => {
+            if (bookings.length === 0) return showToast('沒有資料可匯出', 'error');
+            
+            const headers = ['ID', '分類', '單位', '系統', '承辦人', '日期', '時間', '備註', '狀態']; 
+            const rows = bookings.map(b => {
+                const statusStr = (b.completed === 'true' || b.completed === true) ? "已繳回" : "未繳回";
+                const categoryStr = systemMapping[b.system]?.category || "";
+                return [
+                    b.id,
+                    `"${categoryStr.replace(/"/g, '""')}"`,
+                    `"${(b.unit || '').replace(/"/g, '""')}"`, 
+                    `"${(b.system || '').replace(/"/g, '""')}"`, 
+                    `"${(b.contactPerson || '').replace(/"/g, '""')}"`, 
+                    b.date, b.time, 
+                    `"${(b.service || '').replace(/"/g, '""')}"`,
+                    statusStr
+                ];
+            });
+            const content = "\uFEFF" + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `已預約名單_${getTodayStr()}.csv`;
+            link.click();
+        });
+
+        window.bookSystem = function(sys) {
+            elInputSystem.value = sys;
+            elInputUnit.value = systemMapping[sys].unit || '';
+            elInputContact.value = systemMapping[sys].contactPerson || '';
+            
+            isViewingUnbooked = false;
+            updateUnbookedBtnUI();
+            renderBookingList();
+
+            document.getElementById('booking-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            showToast('已將系統帶入表單，請選擇預約日期與時間');
+        };
+
+        elForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const systemVal = elInputSystem.value;
+            if (!currentAvailableSystems.includes(systemVal)) {
+                showToast('請選擇清單中有效的系統', 'error');
+                return;
+            }
+
+            const isEarlyComplete = elCheckEarlyComplete.checked;
+            const isJointBooking = elCheckJointBooking.checked;
+            const isSpecial = isEarlyComplete || isJointBooking;
+
+            if (!elInputDate.value) {
+                showToast('請選擇預約日期', 'error');
+                return;
+            }
+            
+            if (!isSpecial && !elInputTime.value) {
+                showToast('請選擇預約時間', 'error');
+                return;
+            }
+
+            let timeVal = elInputTime.value;
+            if (isEarlyComplete) timeVal = '提前結案';
+            if (isJointBooking) timeVal = '隨同盤點';
+
+            const newBooking = {
+                id: Date.now().toString(),
+                system: systemVal,
+                unit: elInputUnit.value,
+                contactPerson: elInputContact.value,
+                date: elInputDate.value,
+                time: timeVal,
+                service: elInputService.value,
+                completed: isEarlyComplete ? 'true' : 'false'
+            };
+
+            bookings.push(newBooking);
+            
+            elInputSystem.value = "";
+            elInputUnit.value = "";
+            elInputContact.value = "";
+            elInputDate.value = "";
+            elInputTime.value = "";
+            elInputTime.disabled = true;
+            elInputService.value = "";
+            
+            elCheckEarlyComplete.checked = false;
+            elCheckJointBooking.checked = false;
+            updateTimeContainerState();
+
+            updateAllUI();
+            
+            if (GOOGLE_API_URL) {
+                try {
+                    elBtnSubmit.textContent = "同步中...";
+                    elBtnSubmit.disabled = true;
+                    await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'add', data: newBooking })
+                    });
+                    showToast('預約成功並已寫入 Excel！');
+                } catch (err) {
+                    showToast('雲端寫入失敗，但已暫存於網頁', 'error');
+                } finally {
+                    elBtnSubmit.textContent = "加入名單";
+                    elBtnSubmit.disabled = false;
+                }
+            }
+        });
+
+        window.toggleCompleted = async function(id) {
+            const bookingIndex = bookings.findIndex(b => b.id === id);
+            if(bookingIndex === -1) return;
+
+            const b = bookings[bookingIndex];
+            const isCurrentlyCompleted = (b.completed === 'true' || b.completed === true);
+            b.completed = isCurrentlyCompleted ? 'false' : 'true'; 
+
+            updateAllUI(); 
+
+            if (GOOGLE_API_URL) {
+                try {
+                    await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'delete', id: id })
+                    });
+                    
+                    await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'add', data: b })
+                    });
+                    
+                    showToast(b.completed === 'true' ? '✅ 已標記為繳回！' : '已取消繳回狀態');
+                } catch (err) {
+                    showToast('狀態同步失敗，請稍後再試', 'error');
+                }
+            }
+        };
+
+        window.deleteBooking = async function(id) {
+            if(!confirm('確定要刪除這筆預約嗎？')) return;
+            
+            bookings = bookings.filter(b => b.id !== id);
+            updateAllUI();
+
+            if (GOOGLE_API_URL) {
+                try {
+                    await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'delete', id: id })
+                    });
+                    showToast('已從 Excel 刪除');
+                } catch (err) {
+                    showToast('雲端刪除失敗', 'error');
+                }
+            }
+        };
+
+        let toastTimeout;
+        function showToast(message, type = 'success') {
+            clearTimeout(toastTimeout);
+            elToastMsg.textContent = message;
+            
+            if (type === 'error') {
+                elToastContent.classList.replace('bg-slate-800', 'bg-red-600');
+                document.getElementById('toast-icon').setAttribute('data-lucide', 'alert-circle');
+            } else {
+                elToastContent.classList.replace('bg-red-600', 'bg-slate-800');
+                document.getElementById('toast-icon').setAttribute('data-lucide', 'check-circle');
+            }
+            
+            lucide.createIcons();
+            elToastContainer.classList.remove('hidden-el');
+            
+            toastTimeout = setTimeout(() => {
+                elToastContainer.classList.add('hidden-el');
+            }, 3000);
+        }
+
+        // --- 啟動 ---
+        lucide.createIcons();
+        fetchCloudData();
+
+    </script>
+</body>
+</html>
