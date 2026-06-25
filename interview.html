@@ -106,11 +106,13 @@
             <div class="bg-white border-b border-slate-200 p-6 flex-shrink-0 shadow-sm z-20">
                 <div class="flex justify-between items-start mb-4">
                     <div>
-                        <div class="flex items-center gap-2 mb-1">
+                        <div class="flex items-center gap-2 mb-1.5">
                             <span id="ws-status" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-700 border border-amber-200">未完成</span>
-                            <span id="ws-category" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-100 text-slate-600 border border-slate-200 hidden-el">分類</span>
                         </div>
-                        <h2 id="ws-system" class="text-2xl font-black text-slate-800">系統名稱</h2>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <h2 id="ws-system" class="text-2xl font-black text-slate-800">系統名稱</h2>
+                            <span id="ws-category" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-sm hidden-el">分類</span>
+                        </div>
                     </div>
                     <div class="text-right">
                         <div id="ws-date" class="font-bold text-indigo-600 text-lg">2026-04-10</div>
@@ -142,13 +144,13 @@
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-fade-in">
                         <div class="bg-emerald-50/50 p-3 border-b border-slate-100 flex items-center gap-2">
                             <i data-lucide="mic" class="w-5 h-5 text-emerald-600"></i>
-                            <h3 class="font-bold text-emerald-900">一、訪談紀錄</h3>
+                            <h3 class="font-bold text-emerald-900">一、訪談紀錄 <span class="text-xs text-emerald-700 font-normal ml-2">(點擊展開表單填寫)</span></h3>
                         </div>
                         <div class="p-5">
-                            <div>
-                                <textarea id="ws-interview-notes" rows="12" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all custom-scrollbar" placeholder="在此輸入訪談的逐字稿或重要結論..."></textarea>
+                            <div id="ws-dynamic-forms" class="space-y-2">
+                                <!-- JS 動態產生折疊式表單輸入框 -->
                             </div>
-                            <div class="text-[11px] text-slate-500 mt-3 bg-slate-100/80 p-2.5 rounded border border-slate-200">
+                            <div class="text-[11px] text-slate-500 mt-4 bg-slate-100/80 p-2.5 rounded border border-slate-200">
                                 💡 <strong>備註：</strong>保密同意書及保密切結書等2項，如因契約已終止、境外廠商或非特定供應商(如臉書、LINE社群等)致無法提供前2項者，可註記後免填寫。
                             </div>
                         </div>
@@ -163,24 +165,25 @@
                         <div class="p-5 space-y-4">
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-2">結案狀態判定</label>
-                                <div class="flex flex-col sm:flex-row gap-4">
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="followup-status" value="已訪談完成可用印" class="w-4 h-4 text-amber-500 focus:ring-amber-500 border-slate-300">
+                                <div class="flex flex-col gap-3">
+                                    <label id="label-status-done" class="flex items-center gap-2 cursor-pointer transition-opacity">
+                                        <input type="radio" id="radio-status-done" name="followup-status" value="已訪談完成可用印" class="w-4 h-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 disabled:cursor-not-allowed">
                                         <span class="text-sm font-medium text-slate-700">已訪談完成可用印</span>
                                     </label>
                                     <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="followup-status" value="承辦人自行改完後可以用印" class="w-4 h-4 text-amber-500 focus:ring-amber-500 border-slate-300">
+                                        <input type="radio" name="followup-status" value="承辦人自行改完後可以用印" class="w-4 h-4 text-emerald-500 focus:ring-emerald-500 border-slate-300">
                                         <span class="text-sm font-medium text-slate-700">承辦人自行改完後可以用印</span>
                                     </label>
                                     <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="followup-status" value="需要二次訪談" class="w-4 h-4 text-amber-500 focus:ring-amber-500 border-slate-300">
-                                        <span class="text-sm font-medium text-slate-700">需要二次訪談</span>
+                                        <input type="radio" name="followup-status" value="需要再次訪談" class="w-4 h-4 text-blue-500 focus:ring-blue-500 border-slate-300">
+                                        <span class="text-sm font-medium text-slate-700">需要再次訪談</span>
                                     </label>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-1.5">後續追蹤事項說明</label>
-                                <textarea rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white outline-none transition-all" placeholder="例如：承辦人需於下週五前補件架構圖。"></textarea>
+                                <!-- ✅ 新增 ID 供儲存時讀取 -->
+                                <textarea id="ws-followup-notes" rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white outline-none transition-all" placeholder="例如：承辦人需於下週五前補件架構圖。"></textarea>
                             </div>
                         </div>
                     </div>
@@ -194,11 +197,11 @@
                     返回清單
                 </button>
                 <div class="hidden md:block text-xs text-slate-400 font-bold">
-                    <i data-lucide="info" class="w-3 h-3 inline"></i> 提示：這是一個初步介面展示，儲存功能尚未連接後端。
+                    <i data-lucide="cloud-upload" class="w-3 h-3 inline"></i> 紀錄將會即時同步至雲端試算表。
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="mockSave()" class="px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4"></i> 儲存訪談紀錄
+                    <button id="btn-save-record" onclick="saveRecord()" class="px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2">
+                        <i id="save-icon" data-lucide="save" class="w-4 h-4"></i> <span id="save-text">儲存訪談紀錄</span>
                     </button>
                 </div>
             </div>
@@ -209,7 +212,7 @@
     <!-- Toast 提示 -->
     <div id="toast" class="fixed top-20 right-6 z-50 hidden-el animate-fade-in">
         <div class="bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm">
-            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 紀錄已暫存！ (UI 測試版)
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 紀錄已暫存！
         </div>
     </div>
 
@@ -217,7 +220,7 @@
         // ⚠️ 請使用和 index.html 一模一樣的 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbxRA_bla5U3RTfc-Jqlz-zQXcM-ESRrozvilddaIN0yTObElQaJG0KibC-oVlX8m40F/exec";
 
-        // ✅ 把圖片中的矩陣邏輯直接寫成判斷表
+        // ✅ 矩陣判斷表
         const CATEGORY_REQUIREMENTS = {
             "共通性資通系統": [
                 "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單"
@@ -270,7 +273,11 @@
         const wsService = document.getElementById('ws-service');
         const wsStatus = document.getElementById('ws-status');
         const wsCategory = document.getElementById('ws-category');
-        const wsInterviewNotes = document.getElementById('ws-interview-notes');
+        
+        // 取得儲存按鈕相關元素
+        const btnSaveRecord = document.getElementById('btn-save-record');
+        const saveIcon = document.getElementById('save-icon');
+        const saveText = document.getElementById('save-text');
 
         async function fetchCloudData() {
             try {
@@ -385,7 +392,7 @@
                         <div class="flex justify-between items-start mb-1">
                             <h3 class="font-bold text-sm ${isActive ? 'text-indigo-800' : 'text-slate-700'} truncate pr-2">${b.system}</h3>
                             <span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded ${isCompleted ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
-                                ${isCompleted ? '已繳回' : '未完成'}
+                                ${isCompleted ? '已結案' : '未完成'}
                             </span>
                         </div>
                         <div class="text-[11px] text-slate-500 mb-2 flex items-center gap-2">
@@ -418,9 +425,10 @@
             wsService.textContent = b.service || '無';
             wsService.title = b.service || '無';
 
+            // 設定初始標籤狀態
             const isCompleted = (b.completed === 'true' || b.completed === true);
-            wsStatus.textContent = isCompleted ? '✅ 已繳回結案' : '🟡 待訪談/盤點';
-            wsStatus.className = `px-2 py-0.5 text-[10px] font-bold rounded border ${isCompleted ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'}`;
+            wsStatus.textContent = isCompleted ? '✅ 已結案' : '🟡 未完成';
+            wsStatus.className = `px-2 py-0.5 text-[10px] font-bold rounded-full border ${isCompleted ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'}`;
 
             const category = systemMapping[b.system]?.category || '';
             if (category) {
@@ -430,19 +438,91 @@
                 wsCategory.classList.add('hidden-el');
             }
 
-            // 根據分類帶入專屬表單
+            // ✅ 解析既有的訪談紀錄 (從後端 JSON 字串解析回物件)
+            let savedNotes = {};
+            if (b.interviewNotes) {
+                try { savedNotes = JSON.parse(b.interviewNotes); } catch(e) { console.error('解析紀錄失敗', e); }
+            }
+
+            // 根據分類帶入專屬表單，並以折疊面板呈現
             let itemsToRender = [];
             if (category && CATEGORY_REQUIREMENTS[category]) {
                 itemsToRender = CATEGORY_REQUIREMENTS[category];
             } else {
                 itemsToRender = CATEGORY_REQUIREMENTS["預設全部"];
             }
-            const templateText = itemsToRender.map(item => `[ ] ${item}：`).join('\n\n');
-            wsInterviewNotes.value = templateText;
             
-            // 清除之前的狀態選取
-            document.querySelectorAll('input[name="followup-status"]').forEach(radio => radio.checked = false);
+            const dynamicFormsContainer = document.getElementById('ws-dynamic-forms');
+            if (dynamicFormsContainer) {
+                dynamicFormsContainer.innerHTML = ''; // 清空前一個系統的表單
+                
+                itemsToRender.forEach((item, index) => {
+                    const contentId = `form-content-${index}`;
+                    const badgeId = `form-badge-${index}`;
+                    
+                    // 填入既有資料
+                    const savedText = savedNotes[item] || '';
+                    const hasSavedData = savedText.trim().length > 0;
+                    
+                    const badgeHtml = hasSavedData 
+                        ? `<span id="${badgeId}" class="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 transition-colors">📝 已紀錄</span>`
+                        : `<span id="${badgeId}" class="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-500 transition-colors">未填寫</span>`;
 
+                    const formBlock = document.createElement('div');
+                    formBlock.className = "bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm transition-all";
+                    formBlock.innerHTML = `
+                        <div class="flex justify-between items-center p-3 bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors" onclick="document.getElementById('${contentId}').classList.toggle('hidden-el');">
+                            <div class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i> 
+                                <span class="truncate">${item}</span>
+                            </div>
+                            ${badgeHtml}
+                        </div>
+                        <div id="${contentId}" class="hidden-el p-3 border-t border-slate-100 bg-white">
+                            <textarea rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition-all custom-scrollbar" placeholder="請在此填寫 ${item} 相關紀錄..." oninput="
+                                const badge = document.getElementById('${badgeId}');
+                                if(this.value.trim().length > 0) {
+                                    badge.innerHTML = '📝 已紀錄';
+                                    badge.className = 'flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 transition-colors';
+                                } else {
+                                    badge.innerHTML = '未填寫';
+                                    badge.className = 'flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-500 transition-colors';
+                                }
+                                window.checkTextareasState();
+                            ">${savedText}</textarea>
+                        </div>
+                    `;
+                    dynamicFormsContainer.appendChild(formBlock);
+                });
+            }
+            
+            // ✅ 讀取後續追蹤與狀態
+            const elFollowupNotes = document.getElementById('ws-followup-notes');
+            if (elFollowupNotes) elFollowupNotes.value = b.followupNotes || '';
+
+            // 初始化按鈕
+            btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2';
+            saveIcon.setAttribute('data-lucide', 'save');
+            saveText.textContent = '儲存訪談紀錄';
+
+            let hasCheckedRadio = false;
+            document.querySelectorAll('input[name="followup-status"]').forEach(radio => {
+                if (b.followupStatus && radio.value === b.followupStatus) {
+                    radio.checked = true;
+                    hasCheckedRadio = true;
+                } else {
+                    radio.checked = false;
+                }
+            });
+
+            if (hasCheckedRadio) {
+                const checkedRadio = document.querySelector('input[name="followup-status"]:checked');
+                checkedRadio.dispatchEvent(new Event('change')); // 觸發連動UI
+            }
+
+            window.checkTextareasState(); // 確保載入新系統時狀態防呆計算正確
+
+            // 切換視圖
             elWorkspaceEmpty.classList.add('hidden-el');
             elWorkspaceActive.classList.remove('hidden-el');
             
@@ -473,11 +553,155 @@
             renderList(elSearchInput.value);
         });
 
-        // Demo 用的儲存動畫
-        function mockSave() {
+        // 檢查所有動態文字框是否有值，並連動防呆禁用選項
+        window.checkTextareasState = function() {
+            const textareas = document.querySelectorAll('#ws-dynamic-forms textarea');
+            let hasValue = false;
+            textareas.forEach(ta => {
+                if (ta.value.trim().length > 0) hasValue = true;
+            });
+
+            const radioDone = document.getElementById('radio-status-done');
+            const labelDone = document.getElementById('label-status-done');
+
+            if (hasValue) {
+                radioDone.disabled = true;
+                labelDone.classList.add('opacity-40', 'cursor-not-allowed');
+                labelDone.classList.remove('cursor-pointer');
+                
+                if (radioDone.checked) {
+                    radioDone.checked = false;
+                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2';
+                    saveIcon.setAttribute('data-lucide', 'save');
+                    saveText.textContent = '儲存訪談紀錄';
+                    
+                    wsStatus.textContent = '🟡 未完成';
+                    wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-700 border border-amber-200 transition-colors';
+                    lucide.createIcons();
+                }
+            } else {
+                radioDone.disabled = false;
+                labelDone.classList.remove('opacity-40', 'cursor-not-allowed');
+                labelDone.classList.add('cursor-pointer');
+            }
+        };
+
+        // 狀態判定改變時，連動更改按鈕與標籤狀態
+        document.querySelectorAll('input[name="followup-status"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const val = e.target.value;
+                
+                if (val === '已訪談完成可用印' || val === '承辦人自行改完後可以用印') {
+                    saveText.textContent = '結案';
+                    saveIcon.setAttribute('data-lucide', 'check-circle');
+                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-md text-sm flex items-center gap-2';
+                    
+                    wsStatus.textContent = '✅ 可結案';
+                    wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors';
+                } else if (val === '需要再次訪談') {
+                    saveText.textContent = '儲存訪談紀錄';
+                    saveIcon.setAttribute('data-lucide', 'save');
+                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2';
+                    
+                    wsStatus.textContent = '🔄 再訪談';
+                    wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700 border border-blue-200 transition-colors';
+                }
+                lucide.createIcons();
+            });
+        });
+
+        // ✅ 真正的儲存函式
+        async function saveRecord() {
+            if (!activeBookingId) return;
+
+            // 1. 蒐集表單內容打包成 JSON 字串
+            const notesObj = {};
+            const formBlocks = document.querySelectorAll('#ws-dynamic-forms > div');
+            formBlocks.forEach(block => {
+                const titleEl = block.querySelector('.truncate');
+                const textarea = block.querySelector('textarea');
+                if (titleEl && textarea && textarea.value.trim() !== '') {
+                    notesObj[titleEl.textContent.trim()] = textarea.value.trim();
+                }
+            });
+
+            // 2. 蒐集狀態與追蹤事項
+            const selectedRadio = document.querySelector('input[name="followup-status"]:checked');
+            const followupStatus = selectedRadio ? selectedRadio.value : '';
+            const followupNotes = document.getElementById('ws-followup-notes').value.trim();
+
+            const updateData = {
+                id: activeBookingId,
+                interviewNotes: JSON.stringify(notesObj),
+                followupStatus: followupStatus,
+                followupNotes: followupNotes
+            };
+
+            // 3. UI 變更為讀取中
+            const originalText = saveText.textContent;
+            const originalIcon = saveIcon.getAttribute('data-lucide');
+            saveText.textContent = '儲存中...';
+            saveIcon.setAttribute('data-lucide', 'loader-2');
+            saveIcon.classList.add('animate-spin');
+            btnSaveRecord.disabled = true;
+
+            try {
+                // 發送給 Google Apps Script
+                await fetch(GOOGLE_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'update_interview', data: updateData })
+                });
+                
+                // 即時更新本地端資料 (這樣不用重新整理就能看到最新狀態)
+                const bIndex = bookings.findIndex(x => x.id === activeBookingId);
+                if (bIndex > -1) {
+                    bookings[bIndex].interviewNotes = updateData.interviewNotes;
+                    bookings[bIndex].followupStatus = updateData.followupStatus;
+                    bookings[bIndex].followupNotes = updateData.followupNotes;
+                    
+                    if (followupStatus === '已訪談完成可用印' || followupStatus === '承辦人自行改完後可以用印') {
+                        bookings[bIndex].completed = 'true';
+                    } else if (followupStatus === '需要再次訪談') {
+                        bookings[bIndex].completed = 'false';
+                    }
+                    renderList(elSearchInput.value); 
+                }
+
+                showToast('紀錄已成功儲存至雲端！', 'success');
+            } catch (err) {
+                showToast('儲存失敗，請檢查網路連線', 'error');
+            } finally {
+                // 還原按鈕
+                saveText.textContent = originalText;
+                saveIcon.setAttribute('data-lucide', originalIcon);
+                saveIcon.classList.remove('animate-spin');
+                btnSaveRecord.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // 顯示通知
+        let toastTimeout;
+        function showToast(message, type = 'success') {
+            clearTimeout(toastTimeout);
             const toast = document.getElementById('toast');
+            const toastContent = toast.querySelector('div');
+            
+            toastContent.innerHTML = '';
+            
+            if (type === 'error') {
+                toastContent.className = 'bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm';
+                toastContent.innerHTML = `<i data-lucide="alert-circle" class="w-5 h-5 text-white"></i> ${message}`;
+            } else {
+                toastContent.className = 'bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm';
+                toastContent.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> ${message}`;
+            }
+            
+            lucide.createIcons();
             toast.classList.remove('hidden-el');
-            setTimeout(() => {
+            
+            toastTimeout = setTimeout(() => {
                 toast.classList.add('hidden-el');
             }, 3000);
         }
