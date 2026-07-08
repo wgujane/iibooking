@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 防護一：防止搜尋引擎收錄此內部系統 -->
     <meta name="robots" content="noindex, nofollow">
     <title>訪談設計與紀錄台 - 115年系統盤點</title>
     
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
@@ -27,33 +24,33 @@
         .hidden-el { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
+<body class="text-slate-800 h-screen flex flex-col overflow-hidden">
 
-    <!-- 上方導覽列 -->
-    <header class="bg-white border-b border-slate-200 shadow-sm z-10 flex-shrink-0">
+    <!-- ✅ 全域導覽列 (與 Dashboard 及 Index 完全統一樣式) -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm z-50 flex-shrink-0">
         <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-sm">
-                    <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 text-white p-1.5 rounded-lg">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
                 </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight text-slate-800">系統盤點 - 訪談設計與紀錄台</h1>
-                    <p id="status-text" class="text-[11px] font-medium text-amber-500 flex items-center gap-1">🟡 資料同步中...</p>
-                </div>
+                <h1 class="font-black text-lg text-slate-800 tracking-wide">115年系統盤點 <span class="hidden sm:inline text-slate-400 font-normal text-sm ml-1">| 訪談設計與紀錄台</span></h1>
             </div>
             
-            <div class="flex items-center gap-3">
-                <!-- 搜尋框 -->
-                <div class="relative hidden sm:block">
-                    <input type="text" id="search-input" placeholder="搜尋系統 / 單位..." class="pl-9 pr-4 py-1.5 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-[200px] transition-all">
-                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2"></i>
-                </div>
-                <button onclick="window.location.href='index.html'" class="text-sm font-bold text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors border border-slate-200 flex items-center gap-2">
-                    <i data-lucide="calendar" class="w-4 h-4"></i> 返回預約系統
-                </button>
+            <!-- 導覽按鈕區 -->
+            <div class="flex gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all">
+                    <i data-lucide="calendar" class="w-4 h-4"></i> <span class="hidden sm:inline">預約清單</span>
+                </a>
+                <!-- 當前頁面高亮 -->
+                <a href="interview.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold bg-white text-blue-600 shadow-sm cursor-default pointer-events-none">
+                    <i data-lucide="mic" class="w-4 h-4"></i> <span class="hidden sm:inline">訪談紀錄</span>
+                </a>
+                <a href="dashboard.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden sm:inline">回收統計</span>
+                </a>
             </div>
         </div>
-    </header>
+    </nav>
 
     <!-- 主要內容區 (左右兩欄) -->
     <main class="flex-1 flex overflow-hidden max-w-[1400px] mx-auto w-full">
@@ -67,9 +64,16 @@
                 <span id="list-count" class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
             </div>
             
-            <!-- 日期篩選器 -->
-            <div class="px-3 py-2 bg-white border-b border-slate-100 flex-shrink-0">
-                <select id="sidebar-filter-select" class="w-full text-xs px-2.5 py-1.5 rounded-lg font-bold transition-all bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer outline-none focus:ring-2 focus:ring-indigo-500">
+            <!-- 搜尋框與日期過濾器 (整合區塊) -->
+            <div class="p-3 bg-white border-b border-slate-100 flex-shrink-0 space-y-3">
+                <div class="flex items-center justify-between">
+                    <p id="status-text" class="text-[11px] font-medium text-amber-500 flex items-center gap-1">🟡 資料同步中...</p>
+                </div>
+                <div class="relative w-full">
+                    <input type="text" id="search-input" placeholder="搜尋系統 / 單位 / 承辦人..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                </div>
+                <select id="sidebar-filter-select" class="w-full text-xs px-2.5 py-2 rounded-lg font-bold transition-all bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="all">顯示全部日期</option>
                     <option value="today">僅看今日</option>
                     <optgroup label="📅 依特定日期查看" id="sidebar-filter-date-group">
@@ -80,7 +84,6 @@
             
             <!-- 名單列表 -->
             <div id="booking-list" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1 relative">
-                <!-- 載入中骨架屏 / JS 產生 -->
                 <div class="text-center text-slate-400 mt-10 text-sm flex flex-col items-center">
                     <i data-lucide="loader-2" class="w-6 h-6 animate-spin mb-2"></i>
                     載入中...
@@ -91,8 +94,8 @@
         <!-- 右側：未選擇任何項目時的空畫面 -->
         <section id="workspace-empty" class="flex-1 bg-slate-50 flex flex-col items-center justify-center text-slate-400 z-10">
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center max-w-sm">
-                <div class="bg-indigo-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="mouse-pointer-click" class="w-8 h-8 text-indigo-400"></i>
+                <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="mouse-pointer-click" class="w-8 h-8 text-blue-400"></i>
                 </div>
                 <h3 class="font-bold text-slate-700 text-lg mb-2">準備好開始訪談了嗎？</h3>
                 <p class="text-sm">請從左側名單選擇一個系統，即可展開訪談設計與紀錄工作區。</p>
@@ -115,7 +118,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <div id="ws-date" class="font-bold text-indigo-600 text-lg">2026-04-10</div>
+                        <div id="ws-date" class="font-bold text-blue-600 text-lg">2026-04-10</div>
                         <div id="ws-time" class="text-sm font-bold text-slate-500">14:00</div>
                     </div>
                 </div>
@@ -160,11 +163,11 @@
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-fade-in" style="animation-delay: 0.1s;">
                         <div class="bg-amber-50/50 p-3 border-b border-slate-100 flex items-center gap-2">
                             <i data-lucide="list-todo" class="w-5 h-5 text-amber-600"></i>
-                            <h3 class="font-bold text-amber-900">二、待辦與後續追蹤</h3>
+                            <h3 class="font-bold text-amber-900">二、待辦與後續追蹤 (電子檔結案設定)</h3>
                         </div>
                         <div class="p-5 space-y-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-2">結案狀態判定</label>
+                                <label class="block text-xs font-bold text-slate-500 mb-2">電子紀錄與用印狀態</label>
                                 <div class="flex flex-col gap-3">
                                     <label id="label-status-done" class="flex items-center gap-2 cursor-pointer transition-opacity">
                                         <input type="radio" id="radio-status-done" name="followup-status" value="已訪談完成可用印" class="w-4 h-4 text-emerald-500 focus:ring-emerald-500 border-slate-300 disabled:cursor-not-allowed">
@@ -182,7 +185,6 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-1.5">後續追蹤事項說明</label>
-                                <!-- ✅ 新增 ID 供儲存時讀取 -->
                                 <textarea id="ws-followup-notes" rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white outline-none transition-all" placeholder="例如：承辦人需於下週五前補件架構圖。"></textarea>
                             </div>
                         </div>
@@ -200,7 +202,7 @@
                     <i data-lucide="cloud-upload" class="w-3 h-3 inline"></i> 紀錄將會即時同步至雲端試算表。
                 </div>
                 <div class="flex gap-2">
-                    <button id="btn-save-record" onclick="saveRecord()" class="px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2">
+                    <button id="btn-save-record" onclick="saveRecord()" class="px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md text-sm flex items-center gap-2">
                         <i id="save-icon" data-lucide="save" class="w-4 h-4"></i> <span id="save-text">儲存訪談紀錄</span>
                     </button>
                 </div>
@@ -209,7 +211,7 @@
 
     </main>
 
-    <!-- Toast 提示 -->
+    <!-- Toast 提示元件 -->
     <div id="toast" class="fixed top-20 right-6 z-50 hidden-el animate-fade-in">
         <div class="bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm">
             <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 紀錄已暫存！
@@ -217,29 +219,16 @@
     </div>
 
     <script>
-        // ⚠️ 請使用和 index.html 一模一樣的 API 網址
+        // ⚠️ 請使用你最新的 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbwW7894_-Ji0gAj5DQJ--3aYC9ylCd7E4raXeF-mS8jTXZIQLB6f2V2YAOJzDBjDws/exec";
 
-        // ✅ 矩陣判斷表
         const CATEGORY_REQUIREMENTS = {
-            "共通性資通系統": [
-                "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單"
-            ],
-            "客製資通系統": [
-                "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-02資通系統安全等級評估表", "ISMS-B-04-03資通系統防護基準表", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"
-            ],
-            "套裝資通系統": [
-                "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"
-            ],
-            "工控系統": [
-                "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書"
-            ],
-            "資通服務": [
-                "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書"
-            ],
-            "預設全部": [
-                "ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-02資通系統安全等級評估表", "ISMS-B-04-03資通系統防護基準表", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"
-            ]
+            "共通性資通系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單"],
+            "客製資通系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-02資通系統安全等級評估表", "ISMS-B-04-03資通系統防護基準表", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"],
+            "套裝資通系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"],
+            "工控系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書"],
+            "資通服務": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書"],
+            "預設全部": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-02資通系統安全等級評估表", "ISMS-B-04-03資通系統防護基準表", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"]
         };
 
         let bookings = [];
@@ -252,7 +241,6 @@
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         };
 
-        // DOM Elements
         const elStatusText = document.getElementById('status-text');
         const elListCount = document.getElementById('list-count');
         const elBookingList = document.getElementById('booking-list');
@@ -264,7 +252,6 @@
         const elWorkspaceActive = document.getElementById('workspace-active');
         const elAside = document.querySelector('aside');
         
-        // Workspace Elements
         const wsSystem = document.getElementById('ws-system');
         const wsDate = document.getElementById('ws-date');
         const wsTime = document.getElementById('ws-time');
@@ -274,7 +261,6 @@
         const wsStatus = document.getElementById('ws-status');
         const wsCategory = document.getElementById('ws-category');
         
-        // 取得儲存按鈕相關元素
         const btnSaveRecord = document.getElementById('btn-save-record');
         const saveIcon = document.getElementById('save-icon');
         const saveText = document.getElementById('save-text');
@@ -287,7 +273,6 @@
                 
                 if (result.status === 'success') {
                     bookings = result.bookings || [];
-                    
                     const fetchedUnits = result.units || [];
                     systemMapping = {};
                     
@@ -313,7 +298,7 @@
                         });
                     }
                     
-                    elStatusText.innerHTML = `<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> <span class="text-emerald-600">資料已同步</span>`;
+                    elStatusText.innerHTML = `<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> <span class="text-emerald-600">已連線同步</span>`;
                     updateSidebarFilterOptions();
                     renderList(elSearchInput.value);
                 }
@@ -326,13 +311,9 @@
 
         function updateSidebarFilterOptions() {
             const uniqueDates = [...new Set(bookings.map(b => b.date))].sort();
-            
             if (currentSidebarFilter !== 'all' && currentSidebarFilter !== 'today') {
-                if (!uniqueDates.includes(currentSidebarFilter)) {
-                    currentSidebarFilter = 'all'; 
-                }
+                if (!uniqueDates.includes(currentSidebarFilter)) currentSidebarFilter = 'all'; 
             }
-
             let html = '';
             uniqueDates.forEach(d => {
                 html += `<option value="${d}">${d}</option>`;
@@ -353,7 +334,6 @@
 
             filtered.sort((a, b) => {
                 if (a.date !== b.date) return a.date.localeCompare(b.date);
-                
                 const getSortWeight = (time) => {
                     if (time === '提前結案') return 3;
                     if (time === '隨同盤點') return 2;
@@ -362,7 +342,6 @@
                 const weightA = getSortWeight(a.time);
                 const weightB = getSortWeight(b.time);
                 if (weightA !== weightB) return weightA - weightB;
-                
                 return (a.time || "").localeCompare(b.time || "");
             });
 
@@ -383,23 +362,32 @@
             }
 
             elBookingList.innerHTML = filtered.map(b => {
-                const isCompleted = (b.completed === 'true' || b.completed === true);
                 const isActive = b.id === activeBookingId;
                 
+                // 狀態顯示完全依照電子檔結案邏輯 (不再受紙本 completed 影響)
+                let statusHtml = '';
+                const isClosed = (b.followupStatus === '已訪談完成可用印' || b.followupStatus === '承辦人自行改完後可以用印');
+                
+                if (isClosed) {
+                    statusHtml = `<span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">已結案</span>`;
+                } else if (b.followupStatus === '需要再次訪談') {
+                    statusHtml = `<span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">再訪談</span>`;
+                } else {
+                    statusHtml = `<span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">未完成</span>`;
+                }
+                
                 return `
-                    <div onclick="openWorkspace('${b.id}')" class="p-3 rounded-xl border transition-all cursor-pointer ${isActive ? 'bg-indigo-50 border-indigo-300 shadow-sm relative' : 'bg-white border-slate-100 hover:border-indigo-200 hover:bg-slate-50'}">
-                        ${isActive ? '<div class="absolute left-0 top-3 bottom-3 w-1 bg-indigo-500 rounded-r-full"></div>' : ''}
+                    <div onclick="openWorkspace('${b.id}')" class="p-3 rounded-xl border transition-all cursor-pointer ${isActive ? 'bg-blue-50 border-blue-300 shadow-sm relative' : 'bg-white border-slate-100 hover:border-blue-200 hover:bg-slate-50'}">
+                        ${isActive ? '<div class="absolute left-0 top-3 bottom-3 w-1 bg-blue-500 rounded-r-full"></div>' : ''}
                         <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-sm ${isActive ? 'text-indigo-800' : 'text-slate-700'} truncate pr-2">${b.system}</h3>
-                            <span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded ${isCompleted ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
-                                ${isCompleted ? '已結案' : '未完成'}
-                            </span>
+                            <h3 class="font-bold text-sm ${isActive ? 'text-blue-800' : 'text-slate-700'} truncate pr-2">${b.system}</h3>
+                            ${statusHtml}
                         </div>
                         <div class="text-[11px] text-slate-500 mb-2 flex items-center gap-2">
                             <span><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${b.unit || '-'}</span>
                             <span><i data-lucide="user" class="w-3 h-3 inline"></i> ${b.contactPerson || '-'}</span>
                         </div>
-                        <div class="flex items-center gap-1.5 text-[11px] font-bold ${isActive ? 'text-indigo-600' : 'text-slate-400'}">
+                        <div class="flex items-center gap-1.5 text-[11px] font-bold ${isActive ? 'text-blue-600' : 'text-slate-400'}">
                             <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i> ${b.date === todayStr ? '今日' : b.date} 
                             ${['提前結案', '隨同盤點'].includes(b.time) ? `<span class="bg-slate-200 text-slate-600 px-1 rounded ml-1">${b.time}</span>` : b.time}
                         </div>
@@ -425,10 +413,17 @@
             wsService.textContent = b.service || '無';
             wsService.title = b.service || '無';
 
-            // 設定初始標籤狀態
-            const isCompleted = (b.completed === 'true' || b.completed === true);
-            wsStatus.textContent = isCompleted ? '✅ 已結案' : '🟡 未完成';
-            wsStatus.className = `px-2 py-0.5 text-[10px] font-bold rounded-full border ${isCompleted ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'}`;
+            const isClosed = (b.followupStatus === '已訪談完成可用印' || b.followupStatus === '承辦人自行改完後可以用印');
+            if (isClosed) {
+                wsStatus.textContent = '✅ 已結案';
+                wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full border bg-emerald-50 text-emerald-600 border-emerald-200';
+            } else if (b.followupStatus === '需要再次訪談') {
+                wsStatus.textContent = '🔄 再訪談';
+                wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full border bg-blue-50 text-blue-600 border-blue-200';
+            } else {
+                wsStatus.textContent = '🟡 未完成';
+                wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full border bg-amber-50 text-amber-600 border-amber-200';
+            }
 
             const category = systemMapping[b.system]?.category || '';
             if (category) {
@@ -438,13 +433,11 @@
                 wsCategory.classList.add('hidden-el');
             }
 
-            // ✅ 解析既有的訪談紀錄 (從後端 JSON 字串解析回物件)
             let savedNotes = {};
             if (b.interviewNotes) {
                 try { savedNotes = JSON.parse(b.interviewNotes); } catch(e) { console.error('解析紀錄失敗', e); }
             }
 
-            // 根據分類帶入專屬表單，並以折疊面板呈現
             let itemsToRender = [];
             if (category && CATEGORY_REQUIREMENTS[category]) {
                 itemsToRender = CATEGORY_REQUIREMENTS[category];
@@ -454,18 +447,17 @@
             
             const dynamicFormsContainer = document.getElementById('ws-dynamic-forms');
             if (dynamicFormsContainer) {
-                dynamicFormsContainer.innerHTML = ''; // 清空前一個系統的表單
+                dynamicFormsContainer.innerHTML = ''; 
                 
                 itemsToRender.forEach((item, index) => {
                     const contentId = `form-content-${index}`;
                     const badgeId = `form-badge-${index}`;
                     
-                    // 填入既有資料
                     const savedText = savedNotes[item] || '';
                     const hasSavedData = savedText.trim().length > 0;
                     
                     const badgeHtml = hasSavedData 
-                        ? `<span id="${badgeId}" class="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 transition-colors">📝 已紀錄</span>`
+                        ? `<span id="${badgeId}" class="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700 transition-colors">📝 已紀錄</span>`
                         : `<span id="${badgeId}" class="flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-500 transition-colors">未填寫</span>`;
 
                     const formBlock = document.createElement('div');
@@ -479,11 +471,11 @@
                             ${badgeHtml}
                         </div>
                         <div id="${contentId}" class="hidden-el p-3 border-t border-slate-100 bg-white">
-                            <textarea rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition-all custom-scrollbar" placeholder="請在此填寫 ${item} 相關紀錄..." oninput="
+                            <textarea rows="3" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all custom-scrollbar" placeholder="請在此填寫 ${item} 相關紀錄..." oninput="
                                 const badge = document.getElementById('${badgeId}');
                                 if(this.value.trim().length > 0) {
                                     badge.innerHTML = '📝 已紀錄';
-                                    badge.className = 'flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 transition-colors';
+                                    badge.className = 'flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700 transition-colors';
                                 } else {
                                     badge.innerHTML = '未填寫';
                                     badge.className = 'flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-500 transition-colors';
@@ -496,12 +488,10 @@
                 });
             }
             
-            // ✅ 讀取後續追蹤與狀態
             const elFollowupNotes = document.getElementById('ws-followup-notes');
             if (elFollowupNotes) elFollowupNotes.value = b.followupNotes || '';
 
-            // 初始化按鈕
-            btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2';
+            btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md text-sm flex items-center gap-2';
             saveIcon.setAttribute('data-lucide', 'save');
             saveText.textContent = '儲存訪談紀錄';
 
@@ -517,12 +507,11 @@
 
             if (hasCheckedRadio) {
                 const checkedRadio = document.querySelector('input[name="followup-status"]:checked');
-                checkedRadio.dispatchEvent(new Event('change')); // 觸發連動UI
+                checkedRadio.dispatchEvent(new Event('change')); 
             }
 
-            window.checkTextareasState(); // 確保載入新系統時狀態防呆計算正確
+            window.checkTextareasState(); 
 
-            // 切換視圖
             elWorkspaceEmpty.classList.add('hidden-el');
             elWorkspaceActive.classList.remove('hidden-el');
             
@@ -533,7 +522,6 @@
             lucide.createIcons();
         }
 
-        // 手機版：返回清單
         document.getElementById('btn-close-ws').addEventListener('click', () => {
             elAside.classList.remove('-translate-x-full', 'absolute');
             elWorkspaceActive.classList.add('hidden-el');
@@ -542,18 +530,15 @@
             renderList(elSearchInput.value);
         });
 
-        // 搜尋功能
         elSearchInput.addEventListener('input', (e) => {
             renderList(e.target.value);
         });
 
-        // 日期過濾功能
         elSidebarFilterSelect.addEventListener('change', (e) => {
             currentSidebarFilter = e.target.value;
             renderList(elSearchInput.value);
         });
 
-        // 檢查所有動態文字框是否有值，並連動防呆禁用選項
         window.checkTextareasState = function() {
             const textareas = document.querySelectorAll('#ws-dynamic-forms textarea');
             let hasValue = false;
@@ -571,7 +556,7 @@
                 
                 if (radioDone.checked) {
                     radioDone.checked = false;
-                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2';
+                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md text-sm flex items-center gap-2';
                     saveIcon.setAttribute('data-lucide', 'save');
                     saveText.textContent = '儲存訪談紀錄';
                     
@@ -586,7 +571,6 @@
             }
         };
 
-        // 狀態判定改變時，連動更改按鈕與標籤狀態
         document.querySelectorAll('input[name="followup-status"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const val = e.target.value;
@@ -596,12 +580,12 @@
                     saveIcon.setAttribute('data-lucide', 'check-circle');
                     btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-md text-sm flex items-center gap-2';
                     
-                    wsStatus.textContent = '✅ 可結案';
+                    wsStatus.textContent = '✅ 已結案';
                     wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors';
                 } else if (val === '需要再次訪談') {
                     saveText.textContent = '儲存訪談紀錄';
                     saveIcon.setAttribute('data-lucide', 'save');
-                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md text-sm flex items-center gap-2';
+                    btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md text-sm flex items-center gap-2';
                     
                     wsStatus.textContent = '🔄 再訪談';
                     wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700 border border-blue-200 transition-colors';
@@ -610,11 +594,9 @@
             });
         });
 
-        // ✅ 真正的儲存函式
         async function saveRecord() {
             if (!activeBookingId) return;
 
-            // 1. 蒐集表單內容打包成 JSON 字串
             const notesObj = {};
             const formBlocks = document.querySelectorAll('#ws-dynamic-forms > div');
             formBlocks.forEach(block => {
@@ -625,7 +607,6 @@
                 }
             });
 
-            // 2. 蒐集狀態與追蹤事項
             const selectedRadio = document.querySelector('input[name="followup-status"]:checked');
             const followupStatus = selectedRadio ? selectedRadio.value : '';
             const followupNotes = document.getElementById('ws-followup-notes').value.trim();
@@ -637,7 +618,6 @@
                 followupNotes: followupNotes
             };
 
-            // 3. UI 變更為讀取中
             const originalText = saveText.textContent;
             const originalIcon = saveIcon.getAttribute('data-lucide');
             saveText.textContent = '儲存中...';
@@ -646,25 +626,17 @@
             btnSaveRecord.disabled = true;
 
             try {
-                // 發送給 Google Apps Script
                 await fetch(GOOGLE_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ action: 'update_interview', data: updateData })
                 });
                 
-                // 即時更新本地端資料 (這樣不用重新整理就能看到最新狀態)
                 const bIndex = bookings.findIndex(x => x.id === activeBookingId);
                 if (bIndex > -1) {
                     bookings[bIndex].interviewNotes = updateData.interviewNotes;
                     bookings[bIndex].followupStatus = updateData.followupStatus;
                     bookings[bIndex].followupNotes = updateData.followupNotes;
-                    
-                    if (followupStatus === '已訪談完成可用印' || followupStatus === '承辦人自行改完後可以用印') {
-                        bookings[bIndex].completed = 'true';
-                    } else if (followupStatus === '需要再次訪談') {
-                        bookings[bIndex].completed = 'false';
-                    }
                     renderList(elSearchInput.value); 
                 }
 
@@ -672,7 +644,6 @@
             } catch (err) {
                 showToast('儲存失敗，請檢查網路連線', 'error');
             } finally {
-                // 還原按鈕
                 saveText.textContent = originalText;
                 saveIcon.setAttribute('data-lucide', originalIcon);
                 saveIcon.classList.remove('animate-spin');
@@ -681,7 +652,6 @@
             }
         }
 
-        // 顯示通知
         let toastTimeout;
         function showToast(message, type = 'success') {
             clearTimeout(toastTimeout);
@@ -706,7 +676,6 @@
             }, 3000);
         }
 
-        // 啟動
         lucide.createIcons();
         fetchCloudData();
 
