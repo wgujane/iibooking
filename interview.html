@@ -76,6 +76,7 @@
                 <select id="sidebar-filter-select" class="w-full text-xs px-2.5 py-2 rounded-lg font-bold transition-all bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="all">顯示全部日期</option>
                     <option value="today">僅看今日</option>
+                    <option value="needs_review">⚠️ 僅顯示需二次確認</option>
                     <optgroup label="📅 依特定日期查看" id="sidebar-filter-date-group">
                         <!-- JS 動態產生 -->
                     </optgroup>
@@ -114,6 +115,7 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-3">
                             <h2 id="ws-system" class="text-2xl font-black text-slate-800">系統名稱</h2>
+                            <span id="ws-review-badge" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-amber-50 text-amber-700 border border-amber-200 shadow-sm hidden-el"><i data-lucide="alert-triangle" class="w-3 h-3 inline"></i> 需二次確認</span>
                             <span id="ws-category" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-sm hidden-el">分類</span>
                         </div>
                     </div>
@@ -220,7 +222,7 @@
 
     <script>
         // ⚠️ 請使用你最新的 API 網址
-        const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbwW7894_-Ji0gAj5DQJ--3aYC9ylCd7E4raXeF-mS8jTXZIQLB6f2V2YAOJzDBjDws/exec";
+        const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbxRA_bla5U3RTfc-Jqlz-zQXcM-ESRrozvilddaIN0yTObElQaJG0KibC-oVlX8m40F/exec";
 
         const CATEGORY_REQUIREMENTS = {
             "共通性資通系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單"],
@@ -260,6 +262,7 @@
         const wsService = document.getElementById('ws-service');
         const wsStatus = document.getElementById('ws-status');
         const wsCategory = document.getElementById('ws-category');
+        const wsReviewBadge = document.getElementById('ws-review-badge');
         
         const btnSaveRecord = document.getElementById('btn-save-record');
         const saveIcon = document.getElementById('save-icon');
@@ -311,7 +314,7 @@
 
         function updateSidebarFilterOptions() {
             const uniqueDates = [...new Set(bookings.map(b => b.date))].sort();
-            if (currentSidebarFilter !== 'all' && currentSidebarFilter !== 'today') {
+            if (currentSidebarFilter !== 'all' && currentSidebarFilter !== 'today' && currentSidebarFilter !== 'needs_review') {
                 if (!uniqueDates.includes(currentSidebarFilter)) currentSidebarFilter = 'all'; 
             }
             let html = '';
@@ -328,6 +331,8 @@
             let filtered = bookings.slice();
             if (currentSidebarFilter === 'today') {
                 filtered = filtered.filter(b => b.date === todayStr);
+            } else if (currentSidebarFilter === 'needs_review') {
+                filtered = filtered.filter(b => String(b.needsReview).toLowerCase() === 'true');
             } else if (currentSidebarFilter !== 'all') {
                 filtered = filtered.filter(b => b.date === currentSidebarFilter);
             }
@@ -375,12 +380,16 @@
                 } else {
                     statusHtml = `<span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">未完成</span>`;
                 }
+
+                // 標記是否需要二次確認
+                const needsReview = String(b.needsReview).toLowerCase() === 'true';
+                const reviewBadge = needsReview ? `<span class="bg-amber-100 text-amber-700 border border-amber-300 px-1.5 py-0.5 rounded text-[9px] font-bold ml-1 align-middle"><i data-lucide="alert-triangle" class="w-2.5 h-2.5 inline"></i> 需確認</span>` : '';
                 
                 return `
                     <div onclick="openWorkspace('${b.id}')" class="p-3 rounded-xl border transition-all cursor-pointer ${isActive ? 'bg-blue-50 border-blue-300 shadow-sm relative' : 'bg-white border-slate-100 hover:border-blue-200 hover:bg-slate-50'}">
                         ${isActive ? '<div class="absolute left-0 top-3 bottom-3 w-1 bg-blue-500 rounded-r-full"></div>' : ''}
                         <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-sm ${isActive ? 'text-blue-800' : 'text-slate-700'} truncate pr-2">${b.system}</h3>
+                            <h3 class="font-bold text-sm ${isActive ? 'text-blue-800' : 'text-slate-700'} truncate pr-2">${b.system}${reviewBadge}</h3>
                             ${statusHtml}
                         </div>
                         <div class="text-[11px] text-slate-500 mb-2 flex items-center gap-2">
@@ -431,6 +440,13 @@
                 wsCategory.classList.remove('hidden-el');
             } else {
                 wsCategory.classList.add('hidden-el');
+            }
+
+            // 更新工作區大標題旁邊的二次確認 Badge
+            if (String(b.needsReview).toLowerCase() === 'true') {
+                wsReviewBadge.classList.remove('hidden-el');
+            } else {
+                wsReviewBadge.classList.add('hidden-el');
             }
 
             let savedNotes = {};
