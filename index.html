@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- ✅ 防護一：防止搜尋引擎收錄此內部系統 -->
     <meta name="robots" content="noindex, nofollow">
     <title>來來來!來預約115年系統盤點</title>
     
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -29,7 +26,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- ✅ 全域導覽列 (網站主選單) -->
     <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50 flex-shrink-0">
         <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -39,9 +35,7 @@
                 <h1 class="font-black text-lg text-slate-800 tracking-wide">115年系統盤點 <span class="hidden sm:inline text-slate-400 font-normal text-sm ml-1">| 預約清單</span></h1>
             </div>
             
-            <!-- 導覽按鈕區 -->
             <div class="flex gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
-                <!-- 當前頁面高亮 -->
                 <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold bg-white text-blue-600 shadow-sm cursor-default pointer-events-none">
                     <i data-lucide="calendar" class="w-4 h-4"></i> <span class="hidden sm:inline">預約清單</span>
                 </a>
@@ -55,14 +49,11 @@
         </div>
     </nav>
 
-    <!-- 主要內容區 -->
     <main class="flex-1 w-full max-w-6xl mx-auto p-4 md:p-8 space-y-6">
-        <!-- Header 輕量化 -->
         <div class="flex flex-col md:flex-row justify-between items-center bg-white p-3 px-5 rounded-xl shadow-sm border border-slate-100 gap-4">
             <div id="status-text" class="text-sm font-bold text-amber-500 flex items-center gap-1.5">
                 🟡 載入中...
             </div>
-            <!-- 匯出與同步按鈕 -->
             <div class="flex flex-wrap gap-2 w-full md:w-auto">
                 <button id="btn-sync" class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm font-bold border border-blue-100 hover:bg-blue-100 transition-all">
                     <i data-lucide="refresh-cw" id="sync-icon" class="w-4 h-4"></i> 雲端同步
@@ -77,7 +68,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- 左側表單 -->
             <div class="lg:col-span-1">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 sticky top-24">
                     <h2 class="text-lg font-bold mb-4 flex items-center gap-2 border-b pb-3">
@@ -85,7 +75,6 @@
                     </h2>
                     <form id="booking-form" class="space-y-4">
                         
-                        <!-- 搜尋與選擇系統 Combo Box -->
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-1 flex items-center gap-1">
                                 <i data-lucide="search" class="w-4 h-4 text-blue-500"></i> 搜尋或選擇系統 *
@@ -97,10 +86,9 @@
                                 <i data-lucide="chevron-down" class="absolute right-3 top-3 text-slate-400 w-5 h-5 pointer-events-none"></i>
                                 
                                 <ul id="search-suggestions" class="absolute z-50 w-full bg-white border border-slate-200 rounded-lg shadow-xl mt-1 max-h-60 overflow-y-auto hidden-el custom-scrollbar">
-                                    <!-- JS 動態產生 -->
                                 </ul>
                             </div>
-                            <p class="text-[11px] text-slate-400 mt-1 pl-1">💡 提示：可直接輸入系統名稱、單位或承辦人。</p>
+                            <p class="text-[11px] text-slate-400 mt-1 pl-1">💡 可輸入系統名稱、編號、單位或承辦人。</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 mt-2">
@@ -114,7 +102,6 @@
                             </div>
                         </div>
 
-                        <!-- 狀態選項區塊 (提前繳回 / 隨同盤點) -->
                         <div class="flex flex-col gap-2 mt-3">
                             <div class="flex items-start gap-2 bg-emerald-50/80 p-2.5 rounded-lg border border-emerald-200 transition-colors hover:bg-emerald-50">
                                 <input type="checkbox" id="check-early-complete" class="mt-0.5 w-4 h-4 text-emerald-600 bg-white border-emerald-300 rounded focus:ring-emerald-500 cursor-pointer">
@@ -160,7 +147,6 @@
                 </div>
             </div>
 
-            <!-- 右側名單 -->
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden h-full flex flex-col min-h-[500px]">
                     <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
@@ -174,25 +160,20 @@
                                 <i data-lucide="monitor" class="text-blue-500 w-3.5 h-3.5"></i> <span>總數: <strong id="stat-total" class="text-slate-800">0</strong></span>
                             </div>
                             
-                            <!-- 待預約統計區塊 -->
                             <button id="btn-toggle-unbooked" class="flex items-center gap-1.5 text-slate-600 bg-white hover:bg-amber-50 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-amber-300 shadow-sm text-xs font-medium transition-all cursor-pointer" title="點擊查看待預約名單">
                                 <i id="unbooked-icon" data-lucide="search" class="text-amber-500 w-3.5 h-3.5"></i> 
                                 <span id="unbooked-text">待預約:</span> 
                                 <strong id="stat-unbooked" class="text-amber-600">0</strong><span id="unbooked-suffix" class="hidden-el">)</span>
                             </button>
 
-                            <!-- 已繳回統計區塊 -->
                             <div class="flex items-center gap-1.5 text-slate-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm text-xs font-medium">
                                 <i data-lucide="check-circle" class="text-emerald-500 w-3.5 h-3.5"></i> <span>已繳回: <strong id="stat-completed" class="text-emerald-600">0</strong></span>
                             </div>
                             
-                            <!-- 篩選選單 -->
                             <select id="filter-select" class="text-xs px-2.5 py-1.5 rounded-lg font-bold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="all">顯示全部名單</option>
                                 <option value="today">僅看今日</option>
-                                <optgroup label="📅 依日期查看" id="filter-date-group">
-                                    <!-- JS 動態產生 -->
-                                </optgroup>
+                                <optgroup label="📅 依日期查看" id="filter-date-group"></optgroup>
                             </select>
                         </div>
                     </div>
@@ -205,15 +186,8 @@
                         
                         <table id="booking-table" class="w-full text-left text-sm">
                             <thead id="booking-thead" class="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-widest sticky top-0 shadow-sm z-10">
-                                <tr>
-                                    <th class="p-4 w-[120px]">時間</th>
-                                    <th class="p-4">系統資訊</th>
-                                    <th class="p-4 hidden sm:table-cell">備註</th>
-                                    <th class="p-4 text-right">操作</th>
-                                </tr>
                             </thead>
                             <tbody id="booking-tbody">
-                                <!-- JS 動態產生 -->
                             </tbody>
                         </table>
                     </div>
@@ -221,7 +195,6 @@
             </div>
         </div>
 
-        <!-- 底部行事曆 -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mt-6">
             <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/80">
                 <h3 class="font-bold flex items-center gap-2">
@@ -242,13 +215,11 @@
                         <div class="py-2.5">三</div><div class="py-2.5">四</div><div class="py-2.5">五</div><div class="py-2.5">六</div>
                     </div>
                     <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200">
-                        <!-- JS 動態產生 -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Toast 提示框 -->
         <div id="toast-container" class="fixed bottom-6 right-6 z-50 hidden-el animate-fade-in-up">
             <div id="toast-content" class="px-6 py-3 rounded-xl shadow-xl text-white text-sm font-bold flex items-center gap-2 bg-slate-800">
                 <i id="toast-icon" data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 
@@ -258,16 +229,15 @@
     </main>
 
     <script>
-        // --- 設定區 ---
-        // 請確保此網址是你「重新部署」後的最新網址
+        // ⚠️ 已更新為最新提供的 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbwW7894_-Ji0gAj5DQJ--3aYC9ylCd7E4raXeF-mS8jTXZIQLB6f2V2YAOJzDBjDws/exec";
-        const GEMINI_API_KEY = ""; // Gemini API 密鑰將自動由執行環境注入
+        const GEMINI_API_KEY = ""; 
 
-        // --- 全域狀態 ---
         let bookings = [];
         let availableSlots = [];
         let systemMapping = {};
         let currentAvailableSystems = []; 
+        let currentSelectedSystemId = ""; // ✅ 追蹤目前選擇的 ID
         let isLoading = false;
         let currentFilter = 'all'; 
         let isViewingUnbooked = false;
@@ -282,7 +252,6 @@
             return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
         };
 
-        // --- DOM 元素取得 ---
         const elSyncBtn = document.getElementById('btn-sync');
         const elSyncIcon = document.getElementById('sync-icon');
         const elExportBtn = document.getElementById('btn-export');
@@ -339,25 +308,19 @@
             });
         };
 
-        // --- 初始化與資料拉取 ---
         async function fetchCloudData() {
             if (!GOOGLE_API_URL) return;
-            
             setLoadingState(true);
             try {
                 const response = await fetch(GOOGLE_API_URL, { redirect: "follow" });
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.includes("text/html")) {
-                    throw new Error("權限錯誤：被 Google 擋下了，請確認 Apps Script 是否設為「所有人 (Anyone)」");
-                }
-
+                
+                // 強化防呆：先轉成純文字，避免 Google 丟回登入網頁導致 JSON 解析崩潰
                 const text = await response.text();
-                let result;
-                try {
-                    result = JSON.parse(text);
-                } catch (e) {
-                    throw new Error("資料格式異常：Google 試算表內容可能發生錯誤");
+                if (text.trim().startsWith('<')) {
+                    throw new Error("API 權限遭拒，請至 Google Apps Script 點擊「管理部署作業」➔「編輯」➔ 將存取權限設為「所有人 (Anyone)」");
                 }
+                
+                const result = JSON.parse(text);
                 
                 if (result.status === 'success') {
                     bookings = result.bookings || [];
@@ -366,29 +329,18 @@
                     const fetchedUnits = result.units || [];
                     systemMapping = {};
                     
-                    if (Array.isArray(fetchedUnits)) {
-                        fetchedUnits.forEach(item => {
-                            if (item.system) {
-                                systemMapping[item.system] = {
-                                    unit: item.unit || '',
-                                    contactPerson: item.contactPerson || '',
-                                    folderUrl: item.folderUrl || '',
-                                    category: item.category || ''
-                                };
-                            }
-                        });
-                    } else {
-                        Object.keys(fetchedUnits).forEach(key => {
-                            if (key !== 'system') {
-                                systemMapping[key] = {
-                                    unit: fetchedUnits[key].system || '',
-                                    contactPerson: fetchedUnits[key].contactPerson || '',
-                                    folderUrl: fetchedUnits[key].folderUrl || '',
-                                    category: fetchedUnits[key].category || ''
-                                };
-                            }
-                        });
-                    }
+                    fetchedUnits.forEach(item => {
+                        // ✅ 解析正規化後的 systemId 與 systemName
+                        if (item.systemId) {
+                            systemMapping[item.systemId] = {
+                                systemName: item.systemName || '',
+                                unit: item.unit || '',
+                                contactPerson: item.contactPerson || '',
+                                folderUrl: item.folderUrl || '',
+                                category: item.category || ''
+                            };
+                        }
+                    });
                     
                     elStatusText.innerHTML = `<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> <span class="text-emerald-600">已連線至雲端資料庫</span>`;
                     showToast('已完成雲端同步！');
@@ -397,15 +349,13 @@
                     throw new Error(result.message || "未知的雲端錯誤");
                 }
             } catch (err) {
-                console.error("連線錯誤詳細資訊:", err);
+                console.error("連線錯誤:", err);
                 elStatusText.innerHTML = `<span class="text-red-500">❌ 連線失敗 (${err.message})</span>`;
-                showToast(err.message, 'error');
             } finally {
                 setLoadingState(false);
             }
         }
 
-        // --- 介面更新邏輯 ---
         function updateAllUI() {
             updateStats();
             updateAvailableSystems();
@@ -431,10 +381,8 @@
 
         function updateStats() {
             const totalSystemsCount = Object.keys(systemMapping).length;
-            const bookedSystemsCount = new Set(bookings.map(b => b.system).filter(sys => systemMapping[sys])).size;
+            const bookedSystemsCount = new Set(bookings.map(b => b.systemId).filter(id => systemMapping[id])).size;
             const unbookedSystemsCount = Math.max(0, totalSystemsCount - bookedSystemsCount);
-            
-            // ✅ 修改：統一改吃新的 isSubmitted 欄位，並加上 toLowerCase() 解決大小寫問題
             const completedCount = bookings.filter(b => String(b.isSubmitted).toLowerCase() === 'true').length;
             
             elStatTotal.textContent = totalSystemsCount;
@@ -443,11 +391,11 @@
         }
 
         function updateAvailableSystems() {
-            const bookedSystems = bookings.map(b => b.system);
-            currentAvailableSystems = Object.keys(systemMapping).filter(sys => !bookedSystems.includes(sys));
+            const bookedSystems = bookings.map(b => b.systemId);
+            currentAvailableSystems = Object.keys(systemMapping).filter(id => !bookedSystems.includes(id));
 
-            const currentVal = elInputSystem.value;
-            if (currentVal && !currentAvailableSystems.includes(currentVal)) {
+            if (currentSelectedSystemId && !currentAvailableSystems.includes(currentSelectedSystemId)) {
+                currentSelectedSystemId = "";
                 elInputSystem.value = "";
                 elInputUnit.value = "";
                 elInputContact.value = "";
@@ -464,15 +412,12 @@
             }
 
             const lowerKw = keyword.toLowerCase();
-            
-            const matches = currentAvailableSystems.filter(sys => {
-                const unit = systemMapping[sys].unit || '';
-                const contact = systemMapping[sys].contactPerson || '';
-                const category = systemMapping[sys].category || '';
-                return sys.toLowerCase().includes(lowerKw) || 
-                       unit.toLowerCase().includes(lowerKw) || 
-                       contact.toLowerCase().includes(lowerKw) ||
-                       category.toLowerCase().includes(lowerKw);
+            const matches = currentAvailableSystems.filter(sysId => {
+                const sys = systemMapping[sysId];
+                return sysId.toLowerCase().includes(lowerKw) || 
+                       sys.systemName.toLowerCase().includes(lowerKw) || 
+                       sys.unit.toLowerCase().includes(lowerKw) || 
+                       sys.contactPerson.toLowerCase().includes(lowerKw);
             });
 
             if (matches.length === 0) {
@@ -481,24 +426,23 @@
                 return;
             }
 
-            matches.forEach(sys => {
-                const unit = systemMapping[sys].unit || '無單位';
-                const contact = systemMapping[sys].contactPerson || '無承辦人';
-                const category = systemMapping[sys].category || '';
-                const categoryHtml = category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 ml-2 font-bold">${category}</span>` : '';
+            matches.forEach(sysId => {
+                const sys = systemMapping[sysId];
+                const categoryHtml = sys.category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 ml-2 font-bold">${sys.category}</span>` : '';
                 
                 const li = document.createElement('li');
                 li.className = 'px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-slate-100 last:border-0 transition-colors';
                 li.innerHTML = `
-                    <div class="font-bold text-blue-700 text-sm flex items-center">${sys} ${categoryHtml}</div>
-                    <div class="text-xs font-bold text-slate-500 mt-0.5"><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${unit} &nbsp;|&nbsp; <i data-lucide="contact" class="w-3 h-3 inline"></i> ${contact}</div>
+                    <div class="font-bold text-blue-700 text-sm flex items-center">${sysId} ${sys.systemName} ${categoryHtml}</div>
+                    <div class="text-xs font-bold text-slate-500 mt-0.5"><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${sys.unit} &nbsp;|&nbsp; <i data-lucide="contact" class="w-3 h-3 inline"></i> ${sys.contactPerson}</div>
                 `;
                 
                 li.addEventListener('mousedown', (e) => {
                     e.preventDefault();
-                    elInputSystem.value = sys;
-                    elInputUnit.value = systemMapping[sys].unit;
-                    elInputContact.value = systemMapping[sys].contactPerson;
+                    currentSelectedSystemId = sysId;
+                    elInputSystem.value = `${sysId} ${sys.systemName}`;
+                    elInputUnit.value = sys.unit;
+                    elInputContact.value = sys.contactPerson;
                     elSearchSuggestions.classList.add('hidden-el');
                 });
                 elSearchSuggestions.appendChild(li);
@@ -512,18 +456,14 @@
             const todayStr = getTodayStr();
             const currentTimeStr = getCurrentTimeStr();
             const currentVal = elInputDate.value;
-            
             const isSpecial = elCheckEarlyComplete.checked || elCheckJointBooking.checked;
             
             const uniqueDates = [...new Set(availableSlots.map(s => s.date))];
             const validDates = uniqueDates.filter(d => {
                 if (d < todayStr) return false;
-                
                 if (isSpecial) return true;
-                
                 const timesForDate = availableSlots.filter(s => s.date === d).map(s => s.time);
                 const bookedTimes = bookings.filter(b => b.date === d).map(b => b.time);
-                
                 const validTimes = timesForDate.filter(t => (d === todayStr ? t > currentTimeStr : true));
                 return validTimes.some(t => !bookedTimes.includes(t));
             }).sort();
@@ -582,17 +522,11 @@
 
         function updateFilterOptions() {
             const uniqueDates = [...new Set(bookings.map(b => b.date))].sort();
-            
             if (currentFilter !== 'all' && currentFilter !== 'today') {
-                if (!uniqueDates.includes(currentFilter)) {
-                    currentFilter = 'all'; 
-                }
+                if (!uniqueDates.includes(currentFilter)) currentFilter = 'all'; 
             }
-
             let html = '';
-            uniqueDates.forEach(d => {
-                html += `<option value="${d}">${d}</option>`;
-            });
+            uniqueDates.forEach(d => html += `<option value="${d}">${d}</option>`);
             elFilterDateGroup.innerHTML = html;
             elFilterSelect.value = currentFilter;
         }
@@ -601,6 +535,7 @@
             try {
                 if (!b.date) return '#';
                 const startDate = b.date.replace(/-/g, '');
+                const sysName = systemMapping[b.systemId]?.systemName || b.systemId;
                 
                 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
                 if (!b.time || !timeRegex.test(b.time)) {
@@ -608,8 +543,8 @@
                     if (isNaN(endDateObj.getTime())) return '#';
                     endDateObj.setDate(endDateObj.getDate() + 1);
                     const endDateStr = endDateObj.toISOString().split('T')[0].replace(/-/g, '');
-                    const title = encodeURIComponent(`115年系統盤點：${b.system}`);
-                    const details = encodeURIComponent(`單位：${b.unit}\n承辦人：${b.contactPerson}\n特殊時段：${b.time}\n備註：${b.service || '無'}`);
+                    const title = encodeURIComponent(`115年系統盤點：${b.systemId} ${sysName}`);
+                    const details = encodeURIComponent(`編號：${b.systemId}\n單位：${b.unit}\n承辦人：${b.contactPerson}\n特殊時段：${b.time}\n備註：${b.service || '無'}`);
                     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDateStr}&details=${details}`;
                 }
 
@@ -619,8 +554,8 @@
                 
                 endDateTime.setHours(endDateTime.getHours() + 1);
                 const endDateTimeStr = endDateTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                const title = encodeURIComponent(`115年系統盤點：${b.system}`);
-                const details = encodeURIComponent(`單位：${b.unit}\n承辦人：${b.contactPerson}\n備註：${b.service || '無'}`);
+                const title = encodeURIComponent(`115年系統盤點：${b.systemId} ${sysName}`);
+                const details = encodeURIComponent(`編號：${b.systemId}\n單位：${b.unit}\n承辦人：${b.contactPerson}\n備註：${b.service || '無'}`);
                 
                 return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}T${startTime}/${endDateTimeStr}&details=${details}`;
             } catch (e) {
@@ -657,8 +592,8 @@
             const todayStr = getTodayStr();
 
             if (isViewingUnbooked) {
-                const bookedSystems = bookings.map(b => b.system);
-                const unbookedSystemsKeys = Object.keys(systemMapping).filter(sys => !bookedSystems.includes(sys));
+                const bookedSystems = bookings.map(b => b.systemId);
+                const unbookedSystemsKeys = Object.keys(systemMapping).filter(sysId => !bookedSystems.includes(sysId));
 
                 elBookingCount.textContent = unbookedSystemsKeys.length;
 
@@ -679,8 +614,8 @@
                         </tr>
                     `;
 
-                    elBookingTbody.innerHTML = unbookedSystemsKeys.map(sys => {
-                        const sysData = systemMapping[sys];
+                    elBookingTbody.innerHTML = unbookedSystemsKeys.map(sysId => {
+                        const sysData = systemMapping[sysId];
                         const categoryTag = sysData.category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 font-bold ml-1">${sysData.category}</span>` : '';
                         
                         return `
@@ -690,9 +625,9 @@
                                 </td>
                                 <td class="p-4 align-top">
                                     <div class="font-bold text-slate-700 text-base flex flex-wrap items-center gap-2">
-                                        ${sys} ${categoryTag}
+                                        ${sysId} ${sysData.systemName} ${categoryTag}
                                     </div>
-                                    <div class="text-xs text-slate-500 mt-1 flex flex-col gap-0.5">
+                                    <div class="text-xs text-slate-500 mt-1 flex items-center gap-2">
                                         <span><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${sysData.unit || '-'}</span>
                                         <span><i data-lucide="contact" class="w-3 h-3 inline"></i> ${sysData.contactPerson || '-'}</span>
                                     </div>
@@ -701,7 +636,7 @@
                                     尚未安排盤點
                                 </td>
                                 <td class="p-4 align-top text-right">
-                                    <button onclick="bookSystem('${sys}')" class="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-colors text-xs font-bold inline-flex items-center gap-1 shadow-sm">
+                                    <button onclick="bookSystem('${sysId}')" class="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-colors text-xs font-bold inline-flex items-center gap-1 shadow-sm">
                                         <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> 安排預約
                                     </button>
                                 </td>
@@ -744,14 +679,16 @@
                 
                 elBookingTbody.innerHTML = filtered.map(b => {
                     const isToday = b.date === todayStr;
-                    // ✅ 修改：加上 toLowerCase() 解決 Google Sheets 自動轉大寫 TRUE 的問題
                     const isCompleted = String(b.isSubmitted).toLowerCase() === 'true'; 
+                    const needsReview = String(b.needsReview).toLowerCase() === 'true'; 
                     
-                    const category = systemMapping[b.system]?.category || '';
-                    const categoryTag = category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 font-bold ml-1">${category}</span>` : '';
+                    const sysData = systemMapping[b.systemId] || {};
+                    const sysName = sysData.systemName || b.systemId;
+                    const categoryTag = sysData.category ? `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-1.5 py-0.5 rounded border border-indigo-200 font-bold ml-1">${sysData.category}</span>` : '';
+                    const reviewBadge = needsReview ? `<span class="text-amber-500 ml-1" title="待確認"><i data-lucide="star" class="w-4 h-4 inline fill-current"></i></span>` : '';
 
-                    const folderBtn = (systemMapping[b.system] && systemMapping[b.system].folderUrl && systemMapping[b.system].folderUrl !== "找不到對應資料夾") 
-                        ? `<a href="${systemMapping[b.system].folderUrl}" target="_blank" class="p-1.5 text-blue-500 hover:bg-blue-50 rounded inline-flex" title="開啟資料夾"><i data-lucide="folder-open" class="w-4 h-4"></i></a>` 
+                    const folderBtn = (sysData.folderUrl && sysData.folderUrl !== "找不到對應資料夾") 
+                        ? `<a href="${sysData.folderUrl}" target="_blank" class="p-1.5 text-blue-500 hover:bg-blue-50 rounded inline-flex" title="開啟資料夾"><i data-lucide="folder-open" class="w-4 h-4"></i></a>` 
                         : '';
                         
                     const timeDisplay = ['提前結案', '隨同盤點'].includes(b.time) 
@@ -768,11 +705,12 @@
                             </td>
                             <td class="p-4 align-top">
                                 <div class="font-bold text-slate-700 text-base flex flex-wrap items-center gap-2">
-                                    ${b.system}
+                                    ${b.systemId} ${sysName}
                                     ${categoryTag}
+                                    ${reviewBadge}
                                     ${isCompleted ? '<span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded-full font-bold">已繳回</span>' : ''}
                                 </div>
-                                <div class="text-xs text-slate-500 mt-1 flex flex-col gap-0.5">
+                                <div class="text-xs text-slate-500 mt-1 flex items-center gap-2">
                                     <span><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${b.unit || '-'}</span>
                                     <span><i data-lucide="contact" class="w-3 h-3 inline"></i> ${b.contactPerson || '-'}</span>
                                 </div>
@@ -830,10 +768,11 @@
                 let bookingsHtml = dayBookings.map(b => {
                     const isSpecial = ['提前結案', '隨同盤點'].includes(b.time);
                     const timeLabel = isSpecial ? `<span class="bg-white/50 px-1 rounded mr-1">${b.time}</span>` : `<span class="font-bold opacity-75">${b.time}</span>`;
-                    
+                    const sysName = systemMapping[b.systemId]?.systemName || b.systemId;
+
                     return `
-                    <div class="text-[10px] ${isSpecial ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-blue-100 text-blue-800 border-blue-200'} p-1 rounded truncate mb-1 cursor-default border" title="${b.time} ${b.system}">
-                        ${timeLabel} ${b.system}
+                    <div class="text-[10px] ${isSpecial ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-blue-100 text-blue-800 border-blue-200'} p-1 rounded truncate mb-1 cursor-default border" title="${b.time} ${b.systemId} ${sysName}">
+                        ${timeLabel} ${b.systemId} ${sysName}
                     </div>
                     `;
                 }).join('');
@@ -859,25 +798,21 @@
             elCalendarGrid.innerHTML = html;
         }
 
-        // --- 事件綁定 ---
+        elInputSystem.addEventListener('input', (e) => {
+            currentSelectedSystemId = ""; 
+            renderSearchSuggestions(e.target.value);
+        });
         
         elInputSystem.addEventListener('focus', () => renderSearchSuggestions(elInputSystem.value));
-        elInputSystem.addEventListener('input', (e) => renderSearchSuggestions(e.target.value));
+        
         elInputSystem.addEventListener('blur', () => {
             setTimeout(() => {
                 elSearchSuggestions.classList.add('hidden-el');
-                
-                const val = elInputSystem.value;
-                if (val) {
-                    if (currentAvailableSystems.includes(val)) {
-                        elInputUnit.value = systemMapping[val].unit;
-                        elInputContact.value = systemMapping[val].contactPerson;
-                    } else {
-                        elInputSystem.value = "";
-                        elInputUnit.value = "";
-                        elInputContact.value = "";
-                        showToast('請點選清單中正確的系統', 'error');
-                    }
+                if (!currentSelectedSystemId && elInputSystem.value) {
+                    elInputSystem.value = "";
+                    elInputUnit.value = "";
+                    elInputContact.value = "";
+                    showToast('請務必從下拉清單中選擇正確的系統', 'error');
                 }
             }, 250); 
         });
@@ -940,44 +875,19 @@
 
         elSyncBtn.addEventListener('click', fetchCloudData);
 
-        elExportUnbookedBtn.addEventListener('click', () => {
-            const bookedSystems = bookings.map(b => b.system);
-            const unbookedSystemsKeys = Object.keys(systemMapping).filter(sys => !bookedSystems.includes(sys));
-
-            if (unbookedSystemsKeys.length === 0) return showToast('恭喜！所有系統皆已預約完畢！', 'success');
-
-            const headers = ['分類', '單位', '系統', '承辦人']; 
-            const rows = unbookedSystemsKeys.map(sys => {
-                const sysData = systemMapping[sys];
-                return [
-                    `"${(sysData.category || '').replace(/"/g, '""')}"`,
-                    `"${(sysData.unit || '').replace(/"/g, '""')}"`, 
-                    `"${(sys || '').replace(/"/g, '""')}"`, 
-                    `"${(sysData.contactPerson || '').replace(/"/g, '""')}"`
-                ];
-            });
-
-            const content = "\uFEFF" + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `未預約名單_${getTodayStr()}.csv`;
-            link.click();
-        });
-
         elExportBtn.addEventListener('click', () => {
             if (bookings.length === 0) return showToast('沒有資料可匯出', 'error');
             
-            const headers = ['ID', '分類', '單位', '系統', '承辦人', '日期', '時間', '備註', '狀態']; 
+            const headers = ['ID', '系統編號', '系統名稱', '分類', '單位', '承辦人', '日期', '時間', '備註', '狀態']; 
             const rows = bookings.map(b => {
-                // ✅ 修改：匯出時也改看 isSubmitted，並解決大小寫問題
                 const statusStr = String(b.isSubmitted).toLowerCase() === 'true' ? "已繳回" : "未繳回";
-                const categoryStr = systemMapping[b.system]?.category || "";
+                const sysData = systemMapping[b.systemId] || {};
                 return [
                     b.id,
-                    `"${categoryStr.replace(/"/g, '""')}"`,
+                    `"${b.systemId}"`,
+                    `"${(sysData.systemName || '').replace(/"/g, '""')}"`,
+                    `"${(sysData.category || '').replace(/"/g, '""')}"`,
                     `"${(b.unit || '').replace(/"/g, '""')}"`, 
-                    `"${(b.system || '').replace(/"/g, '""')}"`, 
                     `"${(b.contactPerson || '').replace(/"/g, '""')}"`, 
                     b.date, b.time, 
                     `"${(b.service || '').replace(/"/g, '""')}"`,
@@ -992,26 +902,26 @@
             link.click();
         });
 
-        window.bookSystem = function(sys) {
-            elInputSystem.value = sys;
-            elInputUnit.value = systemMapping[sys].unit || '';
-            elInputContact.value = systemMapping[sys].contactPerson || '';
+        function bookSystem(sysId) {
+            currentSelectedSystemId = sysId;
+            const sysData = systemMapping[sysId];
+            elInputSystem.value = `${sysId} ${sysData.systemName}`;
+            elInputUnit.value = sysData.unit || '';
+            elInputContact.value = sysData.contactPerson || '';
             
             isViewingUnbooked = false;
             updateUnbookedBtnUI();
             renderBookingList();
 
             document.getElementById('booking-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
             showToast('已將系統帶入表單，請選擇預約日期與時間');
-        };
+        }
 
         elForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const systemVal = elInputSystem.value;
-            if (!currentAvailableSystems.includes(systemVal)) {
-                showToast('請選擇清單中有效的系統', 'error');
+            if (!currentSelectedSystemId) {
+                showToast('請從清單中選擇有效的系統', 'error');
                 return;
             }
 
@@ -1023,7 +933,6 @@
                 showToast('請選擇預約日期', 'error');
                 return;
             }
-            
             if (!isSpecial && !elInputTime.value) {
                 showToast('請選擇預約時間', 'error');
                 return;
@@ -1035,18 +944,18 @@
 
             const newBooking = {
                 id: Date.now().toString(),
-                system: systemVal,
+                systemId: currentSelectedSystemId,
                 unit: elInputUnit.value,
                 contactPerson: elInputContact.value,
                 date: elInputDate.value,
                 time: timeVal,
                 service: elInputService.value,
-                // ✅ 修改：新建時存入 isSubmitted
                 isSubmitted: isEarlyComplete ? 'true' : 'false'
             };
 
             bookings.push(newBooking);
             
+            currentSelectedSystemId = "";
             elInputSystem.value = "";
             elInputUnit.value = "";
             elInputContact.value = "";
@@ -1067,10 +976,11 @@
                     elBtnSubmit.disabled = true;
                     await fetch(GOOGLE_API_URL, {
                         method: 'POST',
+                        redirect: 'follow',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify({ action: 'add', data: newBooking })
                     });
-                    showToast('預約成功並已寫入 Excel！');
+                    showToast('預約成功並已寫入雲端！');
                 } catch (err) {
                     showToast('雲端寫入失敗，但已暫存於網頁', 'error');
                 } finally {
@@ -1080,56 +990,38 @@
             }
         });
 
-        // ✅ 強化版：切換已繳回狀態 (改吃 isSubmitted)
-        window.toggleCompleted = async function(id) {
+        async function toggleCompleted(id) {
             const bookingIndex = bookings.findIndex(b => b.id === id);
             if(bookingIndex === -1) return;
 
             const b = bookings[bookingIndex];
-            // ✅ 修正大小寫判斷
             const isCurrentlyCompleted = String(b.isSubmitted).toLowerCase() === 'true';
             const newCompletedStatus = isCurrentlyCompleted ? 'false' : 'true';
             
-            // 先在畫面上即時變更狀態
             b.isSubmitted = newCompletedStatus; 
-            if(typeof updateAllUI === 'function') updateAllUI(); 
-            else if(typeof renderList === 'function') renderList();
+            updateAllUI(); 
 
             if (GOOGLE_API_URL) {
                 try {
                     const response = await fetch(GOOGLE_API_URL, {
                         method: 'POST',
-                        redirect: 'follow', // 確保轉址不被擋
+                        redirect: 'follow',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        // ✅ 修改：呼叫新動作 update_submit
                         body: JSON.stringify({ action: 'update_submit', id: id, isSubmitted: newCompletedStatus })
                     });
-                    
                     const result = await response.json();
-                    
                     if (result.status === 'success') {
                         showToast(newCompletedStatus === 'true' ? '✅ 已標記為繳回！' : '已取消繳回狀態');
-                    } else {
-                        throw new Error(result.message || "雲端處理錯誤");
-                    }
+                    } else throw new Error();
                 } catch (err) {
-                    console.error("同步錯誤詳情:", err);
-                    
-                    // 發生錯誤，還原畫面狀態
                     b.isSubmitted = isCurrentlyCompleted ? 'true' : 'false';
-                    if(typeof updateAllUI === 'function') updateAllUI(); 
-                    else if(typeof renderList === 'function') renderList();
-                    
-                    if (err.message.includes('fetch') || err.message.includes('Unexpected token')) {
-                        showToast('❌ 網路錯誤：請確認 API 網址是否正確', 'error');
-                    } else {
-                        showToast('❌ 同步失敗: ' + err.message, 'error');
-                    }
+                    updateAllUI(); 
+                    showToast('❌ 同步失敗，請稍後再試', 'error');
                 }
             }
-        };
+        }
 
-        window.deleteBooking = async function(id) {
+        async function deleteBooking(id) {
             if(!confirm('確定要刪除這筆預約嗎？')) return;
             
             bookings = bookings.filter(b => b.id !== id);
@@ -1139,54 +1031,34 @@
                 try {
                     await fetch(GOOGLE_API_URL, {
                         method: 'POST',
+                        redirect: 'follow',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify({ action: 'delete', id: id })
                     });
-                    showToast('已從 Excel 刪除');
+                    showToast('已從雲端刪除');
                 } catch (err) {
                     showToast('雲端刪除失敗', 'error');
                 }
             }
-        };
-
-        let toastTimeout;
-        function showToast(message, type = 'success') {
-            clearTimeout(toastTimeout);
-            elToastMsg.textContent = message;
-            
-            if (type === 'error') {
-                elToastContent.classList.replace('bg-slate-800', 'bg-red-600');
-                document.getElementById('toast-icon').setAttribute('data-lucide', 'alert-circle');
-            } else {
-                elToastContent.classList.replace('bg-red-600', 'bg-slate-800');
-                document.getElementById('toast-icon').setAttribute('data-lucide', 'check-circle');
-            }
-            
-            lucide.createIcons();
-            elToastContainer.classList.remove('hidden-el');
-            
-            toastTimeout = setTimeout(() => {
-                elToastContainer.classList.add('hidden-el');
-            }, 3000);
         }
 
-        // --- ✨ AI 輔助功能 ---
         async function generateInterviewOutline() {
-            const systemName = elInputSystem.value;
-            const unitName = elInputUnit.value;
-            const btn = document.getElementById('btn-ai-assist');
-
-            if (!systemName) {
-                showToast('請先選擇或輸入系統名稱，AI 才能幫您產生重點喔！', 'error');
+            if (!currentSelectedSystemId) {
+                showToast('請先選擇或輸入有效的系統，AI 才能幫您產生重點喔！', 'error');
                 return;
             }
+
+            const sysData = systemMapping[currentSelectedSystemId];
+            const systemNameForAI = sysData ? sysData.systemName : elInputSystem.value;
+            const unitName = elInputUnit.value;
+            const btn = document.getElementById('btn-ai-assist');
 
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin inline"></i> 產生中...`;
             btn.disabled = true;
             lucide.createIcons();
 
-            const prompt = `你是一位專業的資訊系統盤點與資安稽核員。現在要對「${systemName}」這套系統進行盤點訪談，負責單位是「${unitName || '未知單位'}」。\n請幫我產生 3 到 4 點精簡的盤點訪談重點或必須提問的問題，作為訪談大綱。\n請直接條列重點（例如：1. 系統架構... 2. 帳號權限...），不要任何問候語或結語。`;
+            const prompt = `你是一位專業的資訊系統盤點與資安稽核員。現在要對「${systemNameForAI}」這套系統進行盤點訪談，負責單位是「${unitName || '未知單位'}」。\n請幫我產生 3 到 4 點精簡的盤點訪談重點或必須提問的問題，作為訪談大綱。\n請直接條列重點（例如：1. 系統架構... 2. 帳號權限...），不要任何問候語或結語。`;
 
             const maxRetries = 5;
             const delays = [1000, 2000, 4000, 8000, 16000];
@@ -1216,7 +1088,6 @@
                     break;
                 } catch (error) {
                     if (attempt === maxRetries) {
-                        console.error("Gemini API generation failed:", error);
                         showToast('❌ AI 產生失敗，請檢查網路或稍後再試。', 'error');
                     } else {
                         await new Promise(res => setTimeout(res, delays[attempt]));
@@ -1229,7 +1100,31 @@
             lucide.createIcons();
         }
 
-        // --- 啟動 ---
+        let toastTimeout;
+        function showToast(message, type = 'success') {
+            clearTimeout(toastTimeout);
+            const elToastContainer = document.getElementById('toast-container');
+            const elToastMsg = document.getElementById('toast-msg');
+            const elToastContent = document.getElementById('toast-content');
+            
+            elToastMsg.textContent = message;
+            
+            if (type === 'error') {
+                elToastContent.className = 'px-6 py-3 rounded-xl shadow-xl text-white text-sm font-bold flex items-center gap-2 bg-red-600';
+                document.getElementById('toast-icon').setAttribute('data-lucide', 'alert-circle');
+            } else {
+                elToastContent.className = 'px-6 py-3 rounded-xl shadow-xl text-white text-sm font-bold flex items-center gap-2 bg-slate-800';
+                document.getElementById('toast-icon').setAttribute('data-lucide', 'check-circle');
+            }
+            
+            lucide.createIcons();
+            elToastContainer.classList.remove('hidden-el');
+            
+            toastTimeout = setTimeout(() => {
+                elToastContainer.classList.add('hidden-el');
+            }, 3000);
+        }
+
         lucide.createIcons();
         fetchCloudData();
 
