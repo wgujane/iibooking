@@ -26,7 +26,6 @@
 </head>
 <body class="text-slate-800 h-screen flex flex-col overflow-hidden">
 
-    <!-- ✅ 全域導覽列 (與 Dashboard 及 Index 完全統一樣式) -->
     <nav class="bg-white border-b border-slate-200 shadow-sm z-50 flex-shrink-0">
         <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -36,12 +35,10 @@
                 <h1 class="font-black text-lg text-slate-800 tracking-wide">115年系統盤點 <span class="hidden sm:inline text-slate-400 font-normal text-sm ml-1">| 訪談設計與紀錄台</span></h1>
             </div>
             
-            <!-- 導覽按鈕區 -->
             <div class="flex gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
                 <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all">
                     <i data-lucide="calendar" class="w-4 h-4"></i> <span class="hidden sm:inline">預約清單</span>
                 </a>
-                <!-- 當前頁面高亮 -->
                 <a href="interview.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold bg-white text-blue-600 shadow-sm cursor-default pointer-events-none">
                     <i data-lucide="mic" class="w-4 h-4"></i> <span class="hidden sm:inline">訪談紀錄</span>
                 </a>
@@ -52,10 +49,8 @@
         </div>
     </nav>
 
-    <!-- 主要內容區 (左右兩欄) -->
     <main class="flex-1 flex overflow-hidden max-w-[1400px] mx-auto w-full">
         
-        <!-- 左側：系統清單 -->
         <aside class="w-full md:w-[350px] bg-white border-r border-slate-200 flex flex-col flex-shrink-0 relative z-0 transition-transform duration-300">
             <div class="p-3 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
                 <h2 class="font-bold text-slate-700 flex items-center gap-2">
@@ -64,26 +59,22 @@
                 <span id="list-count" class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
             </div>
             
-            <!-- 搜尋框與日期過濾器 (整合區塊) -->
             <div class="p-3 bg-white border-b border-slate-100 flex-shrink-0 space-y-3">
                 <div class="flex items-center justify-between">
                     <p id="status-text" class="text-[11px] font-medium text-amber-500 flex items-center gap-1">🟡 資料同步中...</p>
                 </div>
                 <div class="relative w-full">
-                    <input type="text" id="search-input" placeholder="搜尋系統 / 單位 / 承辦人..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm">
+                    <input type="text" id="search-input" placeholder="搜尋系統 / 編號 / 單位..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm">
                     <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
                 </div>
                 <select id="sidebar-filter-select" class="w-full text-xs px-2.5 py-2 rounded-lg font-bold transition-all bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="all">顯示全部日期</option>
                     <option value="today">僅看今日</option>
-                    <option value="needs_review">⚠️ 僅顯示需二次確認</option>
-                    <optgroup label="📅 依特定日期查看" id="sidebar-filter-date-group">
-                        <!-- JS 動態產生 -->
-                    </optgroup>
+                    <option value="needs_review">⭐ 僅顯示需二次確認</option>
+                    <optgroup label="📅 依特定日期查看" id="sidebar-filter-date-group"></optgroup>
                 </select>
             </div>
             
-            <!-- 名單列表 -->
             <div id="booking-list" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1 relative">
                 <div class="text-center text-slate-400 mt-10 text-sm flex flex-col items-center">
                     <i data-lucide="loader-2" class="w-6 h-6 animate-spin mb-2"></i>
@@ -92,7 +83,6 @@
             </div>
         </aside>
 
-        <!-- 右側：未選擇任何項目時的空畫面 -->
         <section id="workspace-empty" class="flex-1 bg-slate-50 flex flex-col items-center justify-center text-slate-400 z-10">
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center max-w-sm">
                 <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -103,10 +93,8 @@
             </div>
         </section>
 
-        <!-- 右側：選擇系統後展開的詳細畫面 -->
         <section id="workspace-active" class="flex-1 bg-slate-50 flex flex-col hidden-el overflow-hidden relative z-10 h-full">
             
-            <!-- 標頭資訊 -->
             <div class="bg-white border-b border-slate-200 p-6 flex-shrink-0 shadow-sm z-20">
                 <div class="flex justify-between items-start mb-4">
                     <div>
@@ -116,7 +104,6 @@
                         <div class="flex flex-wrap items-center gap-3">
                             <h2 id="ws-system" class="text-2xl font-black text-slate-800">系統名稱</h2>
                             <span id="ws-category" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-sm hidden-el">分類</span>
-                            <!-- 新增的動態按鈕區塊 (資料夾與星星) -->
                             <div id="ws-dynamic-actions" class="flex items-center gap-2"></div>
                         </div>
                     </div>
@@ -142,27 +129,21 @@
                 </div>
             </div>
 
-            <!-- 捲動編輯區 -->
             <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
                 <div class="max-w-4xl mx-auto space-y-6">
-                    
-                    <!-- 區塊 1：訪談紀錄 -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-fade-in">
                         <div class="bg-emerald-50/50 p-3 border-b border-slate-100 flex items-center gap-2">
                             <i data-lucide="mic" class="w-5 h-5 text-emerald-600"></i>
                             <h3 class="font-bold text-emerald-900">一、訪談紀錄 <span class="text-xs text-emerald-700 font-normal ml-2">(點擊展開表單填寫)</span></h3>
                         </div>
                         <div class="p-5">
-                            <div id="ws-dynamic-forms" class="space-y-2">
-                                <!-- JS 動態產生折疊式表單輸入框 -->
-                            </div>
+                            <div id="ws-dynamic-forms" class="space-y-2"></div>
                             <div class="text-[11px] text-slate-500 mt-4 bg-slate-100/80 p-2.5 rounded border border-slate-200">
                                 💡 <strong>備註：</strong>保密同意書及保密切結書等2項，如因契約已終止、境外廠商或非特定供應商(如臉書、LINE社群等)致無法提供前2項者，可註記後免填寫。
                             </div>
                         </div>
                     </div>
 
-                    <!-- 區塊 2：後續追蹤 -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-fade-in" style="animation-delay: 0.1s;">
                         <div class="bg-amber-50/50 p-3 border-b border-slate-100 flex items-center gap-2">
                             <i data-lucide="list-todo" class="w-5 h-5 text-amber-600"></i>
@@ -196,7 +177,6 @@
                 </div>
             </div>
             
-            <!-- 底部儲存按鈕區 -->
             <div class="bg-white border-t border-slate-200 p-4 flex justify-between items-center z-20 flex-shrink-0">
                 <button id="btn-close-ws" class="md:hidden text-slate-500 font-bold text-sm px-4 py-2 bg-slate-100 rounded-lg">
                     返回清單
@@ -214,7 +194,6 @@
 
     </main>
 
-    <!-- Toast 提示元件 -->
     <div id="toast" class="fixed top-20 right-6 z-50 hidden-el animate-fade-in">
         <div class="bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm">
             <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 紀錄已暫存！
@@ -222,7 +201,6 @@
     </div>
 
     <script>
-        // ⚠️ 請使用你最新的 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbwW7894_-Ji0gAj5DQJ--3aYC9ylCd7E4raXeF-mS8jTXZIQLB6f2V2YAOJzDBjDws/exec";
 
         const CATEGORY_REQUIREMENTS = {
@@ -273,6 +251,11 @@
             try {
                 const response = await fetch(GOOGLE_API_URL, { redirect: "follow" });
                 const text = await response.text();
+                
+                if (text.trim().startsWith('<')) {
+                    throw new Error("API 權限遭拒，請至 Google Apps Script 檢查存取權限。");
+                }
+                
                 const result = JSON.parse(text);
                 
                 if (result.status === 'success') {
@@ -280,29 +263,17 @@
                     const fetchedUnits = result.units || [];
                     systemMapping = {};
                     
-                    if (Array.isArray(fetchedUnits)) {
-                        fetchedUnits.forEach(item => {
-                            if (item.system) {
-                                systemMapping[item.system] = {
-                                    unit: item.unit || '',
-                                    contactPerson: item.contactPerson || '',
-                                    category: item.category || '',
-                                    folderUrl: item.folderUrl || ''
-                                };
-                            }
-                        });
-                    } else {
-                        Object.keys(fetchedUnits).forEach(key => {
-                            if (key !== 'system') {
-                                systemMapping[key] = {
-                                    unit: fetchedUnits[key].system || '',
-                                    contactPerson: fetchedUnits[key].contactPerson || '',
-                                    category: fetchedUnits[key].category || '',
-                                    folderUrl: fetchedUnits[key].folderUrl || ''
-                                };
-                            }
-                        });
-                    }
+                    fetchedUnits.forEach(item => {
+                        if (item.systemId) {
+                            systemMapping[item.systemId] = {
+                                systemName: item.systemName || '',
+                                unit: item.unit || '',
+                                contactPerson: item.contactPerson || '',
+                                category: item.category || '',
+                                folderUrl: item.folderUrl || ''
+                            };
+                        }
+                    });
                     
                     elStatusText.innerHTML = `<span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> <span class="text-emerald-600">已連線同步</span>`;
                     updateSidebarFilterOptions();
@@ -321,9 +292,7 @@
                 if (!uniqueDates.includes(currentSidebarFilter)) currentSidebarFilter = 'all'; 
             }
             let html = '';
-            uniqueDates.forEach(d => {
-                html += `<option value="${d}">${d}</option>`;
-            });
+            uniqueDates.forEach(d => html += `<option value="${d}">${d}</option>`);
             elSidebarFilterDateGroup.innerHTML = html;
             elSidebarFilterSelect.value = currentSidebarFilter;
         }
@@ -355,11 +324,13 @@
 
             if (searchKw) {
                 const kw = searchKw.toLowerCase();
-                filtered = filtered.filter(b => 
-                    b.system.toLowerCase().includes(kw) || 
-                    (b.unit || '').toLowerCase().includes(kw) ||
-                    (b.contactPerson || '').toLowerCase().includes(kw)
-                );
+                filtered = filtered.filter(b => {
+                    const sysData = systemMapping[b.systemId] || {};
+                    return b.systemId.toLowerCase().includes(kw) || 
+                           (sysData.systemName && sysData.systemName.toLowerCase().includes(kw)) ||
+                           (b.unit || '').toLowerCase().includes(kw) ||
+                           (b.contactPerson || '').toLowerCase().includes(kw);
+                });
             }
 
             elListCount.textContent = filtered.length;
@@ -371,11 +342,11 @@
 
             elBookingList.innerHTML = filtered.map(b => {
                 const isActive = b.id === activeBookingId;
+                const sysData = systemMapping[b.systemId] || {};
+                const sysName = sysData.systemName || '';
                 
-                // 狀態顯示完全依照電子檔結案邏輯 (不再受紙本 completed 影響)
                 let statusHtml = '';
                 const isClosed = (b.followupStatus === '已訪談完成可用印' || b.followupStatus === '承辦人自行改完後可以用印');
-                
                 if (isClosed) {
                     statusHtml = `<span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">已結案</span>`;
                 } else if (b.followupStatus === '需要再次訪談') {
@@ -384,7 +355,6 @@
                     statusHtml = `<span class="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">未完成</span>`;
                 }
 
-                // 標記是否需要二次確認 (改成實心星星)
                 const needsReview = String(b.needsReview).toLowerCase() === 'true';
                 const reviewBadge = needsReview ? `<span class="text-amber-500 ml-1.5 align-middle" title="待確認"><i data-lucide="star" class="w-3.5 h-3.5 inline fill-current"></i></span>` : '';
                 
@@ -392,16 +362,16 @@
                     <div onclick="openWorkspace('${b.id}')" class="p-3 rounded-xl border transition-all cursor-pointer ${isActive ? 'bg-blue-50 border-blue-300 shadow-sm relative' : 'bg-white border-slate-100 hover:border-blue-200 hover:bg-slate-50'}">
                         ${isActive ? '<div class="absolute left-0 top-3 bottom-3 w-1 bg-blue-500 rounded-r-full"></div>' : ''}
                         <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-sm ${isActive ? 'text-blue-800' : 'text-slate-700'} truncate pr-2">${b.system}${reviewBadge}</h3>
+                            <h3 class="font-bold text-sm ${isActive ? 'text-blue-800' : 'text-slate-700'} truncate pr-2">${b.systemId} ${sysName}${reviewBadge}</h3>
                             ${statusHtml}
                         </div>
                         <div class="text-[11px] text-slate-500 mb-2 flex items-center gap-2">
                             <span><i data-lucide="building-2" class="w-3 h-3 inline"></i> ${b.unit || '-'}</span>
                             <span><i data-lucide="user" class="w-3 h-3 inline"></i> ${b.contactPerson || '-'}</span>
                         </div>
-                        <div class="flex items-center gap-1.5 text-[11px] font-bold ${isActive ? 'text-blue-600' : 'text-slate-400'}">
-                            <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i> ${b.date === todayStr ? '今日' : b.date} 
-                            ${['提前結案', '隨同盤點'].includes(b.time) ? `<span class="bg-slate-200 text-slate-600 px-1 rounded ml-1">${b.time}</span>` : b.time}
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 font-medium mt-1 pt-2 border-t border-slate-100/70">
+                            <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> ${b.date === todayStr ? '今日' : b.date}</span>
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${['提前結案', '隨同盤點'].includes(b.time) ? b.time : b.time}</span>
                         </div>
                     </div>
                 `;
@@ -417,27 +387,28 @@
 
             renderList(elSearchInput.value);
 
-            wsSystem.textContent = b.system;
+            const sysData = systemMapping[b.systemId] || {};
+            wsSystem.textContent = `${b.systemId} ${sysData.systemName || ''}`;
             wsDate.textContent = b.date === getTodayStr() ? '今日' : b.date;
             wsTime.textContent = b.time;
             wsUnit.innerHTML = `<i data-lucide="building-2" class="w-3.5 h-3.5 inline text-slate-400"></i> ${b.unit || '-'}`;
             wsContact.innerHTML = `<i data-lucide="user" class="w-3.5 h-3.5 inline text-slate-400"></i> ${b.contactPerson || '-'}`;
             wsService.textContent = b.service || '無';
-            wsService.title = b.service || '無';
-
+            
+            let closedStatusHtml = '';
             const isClosed = (b.followupStatus === '已訪談完成可用印' || b.followupStatus === '承辦人自行改完後可以用印');
             if (isClosed) {
-                wsStatus.textContent = '✅ 已結案';
-                wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full border bg-emerald-50 text-emerald-600 border-emerald-200';
+                wsStatus.className = "px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200";
+                wsStatus.textContent = "已結案 (可印)";
             } else if (b.followupStatus === '需要再次訪談') {
-                wsStatus.textContent = '🔄 再訪談';
-                wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full border bg-blue-50 text-blue-600 border-blue-200';
+                wsStatus.className = "px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700 border border-blue-200";
+                wsStatus.textContent = "需再次訪談";
             } else {
-                wsStatus.textContent = '🟡 未完成';
-                wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full border bg-amber-50 text-amber-600 border-amber-200';
+                wsStatus.className = "px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-700 border border-amber-200";
+                wsStatus.textContent = "未完成";
             }
 
-            const category = systemMapping[b.system]?.category || '';
+            const category = sysData.category || '';
             if (category) {
                 wsCategory.textContent = category;
                 wsCategory.classList.remove('hidden-el');
@@ -445,13 +416,10 @@
                 wsCategory.classList.add('hidden-el');
             }
 
-            // 更新工作區大標題旁邊的動態按鈕 (星星與資料夾)
             const needsReview = String(b.needsReview).toLowerCase() === 'true';
-            const folderUrl = systemMapping[b.system]?.folderUrl || '';
-            
+            const folderUrl = sysData.folderUrl || '';
             let actionsHtml = '';
             
-            // 星星切換按鈕
             if (needsReview) {
                 actionsHtml += `
                     <button onclick="toggleReviewStatus('${b.id}')" class="px-3 py-1 bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-600 text-[11px] font-bold rounded-full flex items-center gap-1 shadow-sm transition-all cursor-pointer" title="取消標記">
@@ -466,7 +434,6 @@
                 `;
             }
 
-            // 資料夾按鈕
             if (folderUrl && folderUrl !== "找不到對應資料夾") {
                 actionsHtml += `
                     <a href="${folderUrl}" target="_blank" class="p-1 bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-300 text-slate-400 hover:text-blue-500 rounded-full flex items-center shadow-sm transition-all cursor-pointer" title="開啟雲端資料夾">
@@ -474,29 +441,21 @@
                     </a>
                 `;
             }
-
             wsDynamicActions.innerHTML = actionsHtml;
 
             let savedNotes = {};
             if (b.interviewNotes) {
-                try { savedNotes = JSON.parse(b.interviewNotes); } catch(e) { console.error('解析紀錄失敗', e); }
+                try { savedNotes = JSON.parse(b.interviewNotes); } catch(e) {}
             }
 
-            let itemsToRender = [];
-            if (category && CATEGORY_REQUIREMENTS[category]) {
-                itemsToRender = CATEGORY_REQUIREMENTS[category];
-            } else {
-                itemsToRender = CATEGORY_REQUIREMENTS["預設全部"];
-            }
-            
+            let itemsToRender = category && CATEGORY_REQUIREMENTS[category] ? CATEGORY_REQUIREMENTS[category] : CATEGORY_REQUIREMENTS["預設全部"];
             const dynamicFormsContainer = document.getElementById('ws-dynamic-forms');
+            
             if (dynamicFormsContainer) {
                 dynamicFormsContainer.innerHTML = ''; 
-                
                 itemsToRender.forEach((item, index) => {
                     const contentId = `form-content-${index}`;
                     const badgeId = `form-badge-${index}`;
-                    
                     const savedText = savedNotes[item] || '';
                     const hasSavedData = savedText.trim().length > 0;
                     
@@ -550,8 +509,7 @@
             });
 
             if (hasCheckedRadio) {
-                const checkedRadio = document.querySelector('input[name="followup-status"]:checked');
-                checkedRadio.dispatchEvent(new Event('change')); 
+                document.querySelector('input[name="followup-status"]:checked').dispatchEvent(new Event('change')); 
             }
 
             window.checkTextareasState(); 
@@ -574,7 +532,6 @@
             renderList(elSearchInput.value);
         });
 
-        // 切換二次確認狀態
         window.toggleReviewStatus = async function(id) {
             const bookingIndex = bookings.findIndex(b => b.id === id);
             if(bookingIndex === -1) return;
@@ -585,11 +542,7 @@
             
             b.needsReview = newReviewStatus; 
             renderList(elSearchInput.value);
-            
-            // 如果當前正在瀏覽這個系統，一併刷新右側按鈕
-            if (activeBookingId === id) {
-                openWorkspace(id);
-            }
+            if (activeBookingId === id) openWorkspace(id);
 
             if (GOOGLE_API_URL) {
                 try {
@@ -602,11 +555,8 @@
                     const result = await response.json();
                     if (result.status === 'success') {
                         showToast(newReviewStatus === 'true' ? '⭐ 已標記為待確認！' : '✅ 已取消確認狀態');
-                    } else {
-                        throw new Error(result.message);
-                    }
+                    } else throw new Error();
                 } catch (err) {
-                    console.error(err);
                     b.needsReview = isCurrentlyNeedReview ? 'true' : 'false';
                     renderList(elSearchInput.value);
                     if (activeBookingId === id) openWorkspace(id);
@@ -615,10 +565,7 @@
             }
         };
 
-        elSearchInput.addEventListener('input', (e) => {
-            renderList(e.target.value);
-        });
-
+        elSearchInput.addEventListener('input', (e) => renderList(e.target.value));
         elSidebarFilterSelect.addEventListener('change', (e) => {
             currentSidebarFilter = e.target.value;
             renderList(elSearchInput.value);
@@ -627,9 +574,7 @@
         window.checkTextareasState = function() {
             const textareas = document.querySelectorAll('#ws-dynamic-forms textarea');
             let hasValue = false;
-            textareas.forEach(ta => {
-                if (ta.value.trim().length > 0) hasValue = true;
-            });
+            textareas.forEach(ta => { if (ta.value.trim().length > 0) hasValue = true; });
 
             const radioDone = document.getElementById('radio-status-done');
             const labelDone = document.getElementById('label-status-done');
@@ -638,13 +583,11 @@
                 radioDone.disabled = true;
                 labelDone.classList.add('opacity-40', 'cursor-not-allowed');
                 labelDone.classList.remove('cursor-pointer');
-                
                 if (radioDone.checked) {
                     radioDone.checked = false;
                     btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md text-sm flex items-center gap-2';
                     saveIcon.setAttribute('data-lucide', 'save');
                     saveText.textContent = '儲存訪談紀錄';
-                    
                     wsStatus.textContent = '🟡 未完成';
                     wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-700 border border-amber-200 transition-colors';
                     lucide.createIcons();
@@ -659,21 +602,14 @@
         document.querySelectorAll('input[name="followup-status"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const val = e.target.value;
-                
                 if (val === '已訪談完成可用印' || val === '承辦人自行改完後可以用印') {
                     saveText.textContent = '結案';
                     saveIcon.setAttribute('data-lucide', 'check-circle');
                     btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-md text-sm flex items-center gap-2';
-                    
-                    wsStatus.textContent = '✅ 已結案';
-                    wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors';
                 } else if (val === '需要再次訪談') {
-                    saveText.textContent = '儲存訪談紀錄';
+                    saveText.textContent = '儲存 (需再訪談)';
                     saveIcon.setAttribute('data-lucide', 'save');
                     btnSaveRecord.className = 'px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md text-sm flex items-center gap-2';
-                    
-                    wsStatus.textContent = '🔄 再訪談';
-                    wsStatus.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700 border border-blue-200 transition-colors';
                 }
                 lucide.createIcons();
             });
@@ -681,64 +617,55 @@
 
         async function saveRecord() {
             if (!activeBookingId) return;
-
-            const notesObj = {};
-            const formBlocks = document.querySelectorAll('#ws-dynamic-forms > div');
-            formBlocks.forEach(block => {
-                const titleEl = block.querySelector('.truncate');
-                const textarea = block.querySelector('textarea');
-                if (titleEl && textarea && textarea.value.trim() !== '') {
-                    notesObj[titleEl.textContent.trim()] = textarea.value.trim();
-                }
-            });
-
-            const selectedRadio = document.querySelector('input[name="followup-status"]:checked');
-            const followupStatus = selectedRadio ? selectedRadio.value : '';
-            const followupNotes = document.getElementById('ws-followup-notes').value.trim();
-
-            const updateData = {
-                id: activeBookingId,
-                interviewNotes: JSON.stringify(notesObj),
-                followupStatus: followupStatus,
-                followupNotes: followupNotes
-            };
+            const b = bookings.find(x => x.id === activeBookingId);
+            if (!b) return;
 
             const originalText = saveText.textContent;
-            const originalIcon = saveIcon.getAttribute('data-lucide');
             saveText.textContent = '儲存中...';
             saveIcon.setAttribute('data-lucide', 'loader-2');
             saveIcon.classList.add('animate-spin');
             btnSaveRecord.disabled = true;
+            lucide.createIcons();
+
+            let savedNotes = {};
+            const textareas = document.querySelectorAll('#ws-dynamic-forms textarea');
+            textareas.forEach((ta, idx) => {
+                const title = ta.previousElementSibling.querySelector('.truncate').textContent;
+                savedNotes[title] = ta.value;
+            });
+
+            const selectedRadio = document.querySelector('input[name="followup-status"]:checked');
+            const updateData = {
+                id: activeBookingId,
+                interviewNotes: JSON.stringify(savedNotes),
+                followupStatus: selectedRadio ? selectedRadio.value : '',
+                followupNotes: document.getElementById('ws-followup-notes').value.trim()
+            };
 
             try {
-                const response = await fetch(GOOGLE_API_URL, {
-                    method: 'POST',
-                    redirect: 'follow', // ✅ 加上這行，允許跟隨 Google 轉址
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'update_interview', data: updateData })
-                });
-                
-                const result = await response.json(); // ✅ 等待並解析回傳結果
-                
-                if (result.status !== 'success') {
-                    throw new Error(result.message || '雲端處理錯誤');
+                if (GOOGLE_API_URL) {
+                    const response = await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'update_interview', data: updateData })
+                    });
+                    const result = await response.json(); 
+                    if (result.status !== 'success') throw new Error(result.message);
                 }
                 
-                const bIndex = bookings.findIndex(x => x.id === activeBookingId);
-                if (bIndex > -1) {
-                    bookings[bIndex].interviewNotes = updateData.interviewNotes;
-                    bookings[bIndex].followupStatus = updateData.followupStatus;
-                    bookings[bIndex].followupNotes = updateData.followupNotes;
-                    renderList(elSearchInput.value); 
-                }
-
+                b.interviewNotes = updateData.interviewNotes;
+                b.followupStatus = updateData.followupStatus;
+                b.followupNotes = updateData.followupNotes;
+                
+                renderList(elSearchInput.value); 
+                openWorkspace(activeBookingId);
                 showToast('紀錄已成功儲存至雲端！', 'success');
             } catch (err) {
-                console.error("儲存發生錯誤：", err);
                 showToast('儲存失敗，請檢查網路連線', 'error');
             } finally {
                 saveText.textContent = originalText;
-                saveIcon.setAttribute('data-lucide', originalIcon);
+                saveIcon.setAttribute('data-lucide', 'save');
                 saveIcon.classList.remove('animate-spin');
                 btnSaveRecord.disabled = false;
                 lucide.createIcons();
@@ -750,9 +677,7 @@
             clearTimeout(toastTimeout);
             const toast = document.getElementById('toast');
             const toastContent = toast.querySelector('div');
-            
             toastContent.innerHTML = '';
-            
             if (type === 'error') {
                 toastContent.className = 'bg-red-600 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm';
                 toastContent.innerHTML = `<i data-lucide="alert-circle" class="w-5 h-5 text-white"></i> ${message}`;
@@ -760,13 +685,9 @@
                 toastContent.className = 'bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl font-bold flex items-center gap-2 text-sm';
                 toastContent.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> ${message}`;
             }
-            
             lucide.createIcons();
             toast.classList.remove('hidden-el');
-            
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('hidden-el');
-            }, 3000);
+            toastTimeout = setTimeout(() => toast.classList.add('hidden-el'), 3000);
         }
 
         lucide.createIcons();
