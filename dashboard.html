@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 防護：防止搜尋引擎收錄此內部系統 -->
     <meta name="robots" content="noindex, nofollow">
     <title>回收統計儀表板 - 115年系統盤點</title>
     
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -28,7 +25,7 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
 
-    <!-- ✅ 全域導覽列 -->
+    <!-- 全域導覽列 -->
     <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50 flex-shrink-0">
         <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -38,7 +35,6 @@
                 <h1 class="font-black text-lg text-slate-800 tracking-wide">115年系統盤點 <span class="hidden sm:inline text-slate-400 font-normal text-sm ml-1">| 回收統計</span></h1>
             </div>
             
-            <!-- 導覽按鈕區 -->
             <div class="flex gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
                 <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all">
                     <i data-lucide="calendar" class="w-4 h-4"></i> <span class="hidden sm:inline">預約清單</span>
@@ -46,7 +42,6 @@
                 <a href="interview.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all">
                     <i data-lucide="mic" class="w-4 h-4"></i> <span class="hidden sm:inline">訪談紀錄</span>
                 </a>
-                <!-- 當前頁面高亮 -->
                 <a href="dashboard.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-bold bg-white text-blue-600 shadow-sm cursor-default pointer-events-none">
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden sm:inline">回收統計</span>
                 </a>
@@ -55,7 +50,7 @@
     </nav>
 
     <!-- 主要內容區 -->
-    <main class="flex-1 w-full max-w-6xl mx-auto p-4 md:p-8 space-y-6">
+    <main class="flex-1 w-full max-w-[1400px] mx-auto p-4 md:p-8 space-y-6">
         
         <!-- 標頭與功能按鈕區 -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in">
@@ -67,7 +62,6 @@
                     🟡 資料載入與計算中...
                 </p>
             </div>
-            <!-- ✅ 新增匯出未繳回按鈕 -->
             <div class="flex flex-wrap gap-2 w-full md:w-auto">
                 <button onclick="exportUnsubmitted()" class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-bold border border-amber-600 hover:bg-amber-600 transition-all shadow-sm">
                     <i data-lucide="download" class="w-4 h-4"></i> 匯出未繳回清單
@@ -80,7 +74,6 @@
 
         <!-- KPI 數據卡片區 -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in" style="animation-delay: 0.1s;">
-            <!-- 卡片 1 -->
             <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-2">
                     <div class="text-sm font-bold text-slate-500">總預約系統數</div>
@@ -88,7 +81,6 @@
                 </div>
                 <div class="text-3xl font-black text-slate-800" id="kpi-total-systems">0</div>
             </div>
-            <!-- 卡片 2 (電子檔結案數) -->
             <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-2">
                     <div class="text-sm font-bold text-slate-500">已結案系統 (電子檔)</div>
@@ -102,7 +94,6 @@
                     <div id="bar-closed-systems" class="bg-emerald-500 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
-            <!-- 卡片 3 (應收總表單數) -->
             <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-2">
                     <div class="text-sm font-bold text-slate-500">應收表單總數</div>
@@ -111,7 +102,6 @@
                 <div class="text-3xl font-black text-slate-800" id="kpi-total-docs">0</div>
                 <div class="text-xs text-slate-400 mt-2 font-medium">依據各系統分類自動計算</div>
             </div>
-            <!-- 卡片 4 (紙本繳回進度) -->
             <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden border-b-4 border-b-indigo-500">
                 <div class="absolute -right-4 -bottom-4 opacity-5"><i data-lucide="inbox" class="w-32 h-32 text-indigo-600"></i></div>
                 <div class="flex justify-between items-start mb-2 relative z-10">
@@ -130,21 +120,20 @@
 
         <!-- 明細進度表 -->
         <section class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden animate-fade-in" style="animation-delay: 0.2s;">
-            <!-- 表格標頭與搜尋區塊 -->
             <div class="p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                 <div class="flex items-center gap-2">
                     <h3 class="font-bold text-slate-800 flex items-center gap-2">
                         <i data-lucide="table-properties" class="w-5 h-5 text-blue-600"></i> 各系統追蹤明細表
                     </h3>
-                    <div class="text-xs text-slate-500 font-bold hidden xl:block ml-2">💡 收到紙本表單時，可直接點擊右側按鈕進行歸檔！</div>
+                    <div class="text-xs text-slate-500 font-bold hidden xl:block ml-2">💡 點擊備註欄位即可隨時記錄追蹤狀況！</div>
                 </div>
                 
-                <!-- ✅ 新增篩選器與即時搜尋框並排 -->
                 <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
                     <select id="dashboard-filter" onchange="calculateAndRender()" class="w-full sm:w-auto px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm font-bold text-slate-600 cursor-pointer">
                         <option value="all">顯示全部狀態</option>
                         <option value="unsubmitted">⚠️ 僅顯示未繳回</option>
                         <option value="submitted">✅ 僅顯示已繳回</option>
+                        <option value="needs_review">⭐ 僅顯示需二次確認</option>
                     </select>
                     
                     <div class="relative w-full sm:w-72 flex-shrink-0">
@@ -160,13 +149,15 @@
                         <tr>
                             <th class="p-4 whitespace-nowrap">系統名稱 / 分類</th>
                             <th class="p-4 whitespace-nowrap">單位 / 承辦人</th>
-                            <th class="p-4 whitespace-nowrap">結案狀態 (電子檔)</th>
-                            <th class="p-4 whitespace-nowrap">紙本繳回狀態 (點擊可切換)</th>
+                            <th class="p-4 whitespace-nowrap">結案狀態 (電子)</th>
+                            <th class="p-4 whitespace-nowrap text-center">二次確認 (顧問用)</th>
+                            <th class="p-4 whitespace-nowrap">繳回狀態(紙本)</th>
+                            <th class="p-4 whitespace-nowrap w-48">備註</th>
                         </tr>
                     </thead>
                     <tbody id="dashboard-tbody">
                         <tr>
-                            <td colspan="4" class="p-8 text-center text-slate-400">
+                            <td colspan="6" class="p-8 text-center text-slate-400">
                                 <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i> 資料計算中...
                             </td>
                         </tr>
@@ -176,6 +167,28 @@
         </section>
 
     </main>
+
+    <!-- 備註編輯彈窗 (Modal) -->
+    <div id="note-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden-el flex justify-center items-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i> 編輯系統備註</h3>
+                <button onclick="closeNoteModal()" class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div>
+                    <div id="note-modal-system" class="text-sm font-bold text-indigo-700 mb-2">系統名稱</div>
+                    <textarea id="note-modal-input" rows="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition-all custom-scrollbar" placeholder="請輸入備註事項 (例如：紙本缺漏附件、待主管簽核...)"></textarea>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+                <button onclick="closeNoteModal()" class="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-200 rounded-lg transition-colors">取消</button>
+                <button onclick="saveDashboardNote()" id="btn-save-note" class="px-5 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors shadow-sm flex items-center gap-2">
+                    <i data-lucide="save" id="icon-save-note" class="w-4 h-4"></i> <span>儲存備註</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast 提示元件 -->
     <div id="toast" class="fixed top-20 right-6 z-50 hidden-el animate-fade-in">
@@ -188,7 +201,6 @@
         // ⚠️ 請使用你目前最新的 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbwW7894_-Ji0gAj5DQJ--3aYC9ylCd7E4raXeF-mS8jTXZIQLB6f2V2YAOJzDBjDws/exec";
 
-        // 分類矩陣
         const CATEGORY_REQUIREMENTS = {
             "共通性資通系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-04資訊資產清冊", "ISMS-B-10-01帳號權限審查紀錄單"],
             "客製資通系統": ["ISMS-B-01-03外部單位聯絡清單", "ISMS-B-03-01關注方清單", "ISMS-B-04-02資通系統安全等級評估表", "ISMS-B-04-03資通系統防護基準表", "ISMS-B-04-04資訊資產清冊", "ISMS-B-08-05備份計畫表", "ISMS-B-08-06備份回復測試紀錄表", "ISMS-B-10-01帳號權限審查紀錄單", "ISMS-B-12-01保密同意書", "ISMS-B-12-02保密切結書", "ISMS-B-14-01業務流程衝擊分析表"],
@@ -254,7 +266,6 @@
             const isCurrentlyCompleted = String(b.isSubmitted).toLowerCase() === 'true';
             const newCompletedStatus = isCurrentlyCompleted ? 'false' : 'true';
             
-            // 樂觀更新 UI (讓畫面瞬間改變)
             b.isSubmitted = newCompletedStatus; 
             calculateAndRender(); 
 
@@ -266,31 +277,118 @@
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify({ action: 'update_submit', id: id, isSubmitted: newCompletedStatus })
                     });
-                    
                     const result = await response.json();
-                    
                     if (result.status === 'success') {
                         showToast(newCompletedStatus === 'true' ? '✅ 已標記為收回歸檔！' : '已取消紙本收回狀態');
                     } else {
-                        throw new Error(result.message || "雲端處理錯誤");
+                        throw new Error(result.message);
                     }
                 } catch (err) {
-                    console.error("同步錯誤詳情:", err);
-                    // 失敗時還原狀態
+                    console.error(err);
                     b.isSubmitted = isCurrentlyCompleted ? 'true' : 'false';
                     calculateAndRender();
-                    
-                    if (err.message.includes('fetch') || err.message.includes('Unexpected token')) {
-                        showToast('❌ 網路錯誤：請確認 API 網址是否正確', 'error');
-                    } else {
-                        showToast('❌ 同步失敗: ' + err.message, 'error');
-                    }
+                    showToast('❌ 同步失敗: ' + err.message, 'error');
                 }
             }
         };
 
+        window.toggleReviewStatus = async function(id) {
+            const bookingIndex = bookings.findIndex(b => b.id === id);
+            if(bookingIndex === -1) return;
+
+            const b = bookings[bookingIndex];
+            const isCurrentlyNeedReview = String(b.needsReview).toLowerCase() === 'true';
+            const newReviewStatus = isCurrentlyNeedReview ? 'false' : 'true';
+            
+            b.needsReview = newReviewStatus; 
+            calculateAndRender(); 
+
+            if (GOOGLE_API_URL) {
+                try {
+                    const response = await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'update_review_status', id: id, needsReview: newReviewStatus })
+                    });
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        showToast(newReviewStatus === 'true' ? '⭐ 已標記為需二次確認！' : '✅ 已取消需確認狀態');
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    b.needsReview = isCurrentlyNeedReview ? 'true' : 'false';
+                    calculateAndRender();
+                    showToast('❌ 狀態同步失敗，請稍後再試', 'error');
+                }
+            }
+        };
+
+        // --- 備註 Modal 邏輯 ---
+        let editingNoteId = null;
+
+        window.openNoteModal = function(id) {
+            const b = bookings.find(x => x.id === id);
+            if (!b) return;
+            editingNoteId = id;
+            document.getElementById('note-modal-system').textContent = b.system;
+            document.getElementById('note-modal-input').value = b.dashboardNote || '';
+            document.getElementById('note-modal').classList.remove('hidden-el');
+            lucide.createIcons();
+        };
+
+        window.closeNoteModal = function() {
+            document.getElementById('note-modal').classList.add('hidden-el');
+            editingNoteId = null;
+        };
+
+        window.saveDashboardNote = async function() {
+            if (!editingNoteId) return;
+            const newNote = document.getElementById('note-modal-input').value.trim();
+            const b = bookings.find(x => x.id === editingNoteId);
+            if (!b) return;
+
+            const btnSave = document.getElementById('btn-save-note');
+            const iconSave = document.getElementById('icon-save-note');
+            const originalText = btnSave.querySelector('span').textContent;
+            
+            btnSave.querySelector('span').textContent = '儲存中...';
+            iconSave.setAttribute('data-lucide', 'loader-2');
+            iconSave.classList.add('animate-spin');
+            btnSave.disabled = true;
+            lucide.createIcons();
+
+            try {
+                if (GOOGLE_API_URL) {
+                    const response = await fetch(GOOGLE_API_URL, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'update_dashboard_note', id: editingNoteId, dashboardNote: newNote })
+                    });
+                    const result = await response.json();
+                    if (result.status !== 'success') throw new Error(result.message);
+                }
+                
+                b.dashboardNote = newNote;
+                calculateAndRender();
+                closeNoteModal();
+                showToast('✅ 備註已儲存！');
+            } catch (err) {
+                console.error(err);
+                showToast('❌ 儲存失敗: ' + err.message, 'error');
+            } finally {
+                btnSave.querySelector('span').textContent = originalText;
+                iconSave.setAttribute('data-lucide', 'save');
+                iconSave.classList.remove('animate-spin');
+                btnSave.disabled = false;
+                lucide.createIcons();
+            }
+        };
+
         function calculateAndRender() {
-            // 1. 計算全域 KPI (不論搜尋條件為何，頂部數據卡片永遠顯示整體狀況)
             let totalSystems = bookings.length;
             let closedSystems = 0;    
             let recoveredSystems = 0; 
@@ -305,7 +403,6 @@
                 totalRequiredDocs += requiredDocsArray.length;
             });
 
-            // 更新 DOM 卡片數據
             document.getElementById('kpi-total-systems').textContent = totalSystems;
             document.getElementById('kpi-closed-systems').textContent = closedSystems;
             const closedRate = totalSystems > 0 ? Math.round((closedSystems / totalSystems) * 100) : 0;
@@ -318,24 +415,23 @@
             document.getElementById('kpi-recovered-rate').textContent = `${recoveredRate}%`;
             document.getElementById('bar-recovered-systems').style.width = `${recoveredRate}%`;
 
-            // 2. 處理表格渲染 (套用排序、狀態篩選與關鍵字搜尋)
             const searchKw = document.getElementById('dashboard-search').value.toLowerCase().trim();
             const filterState = document.getElementById('dashboard-filter').value;
 
             let sortedBookings = [...bookings].sort((a, b) => {
                 const aDone = String(a.isSubmitted).toLowerCase() === 'true';
                 const bDone = String(b.isSubmitted).toLowerCase() === 'true';
-                return aDone - bDone; // 未繳回的排在上面，已繳回的在下面
+                return aDone - bDone; 
             });
 
-            // ✅ 應用狀態篩選
             if (filterState === 'unsubmitted') {
                 sortedBookings = sortedBookings.filter(b => String(b.isSubmitted).toLowerCase() !== 'true');
             } else if (filterState === 'submitted') {
                 sortedBookings = sortedBookings.filter(b => String(b.isSubmitted).toLowerCase() === 'true');
+            } else if (filterState === 'needs_review') {
+                sortedBookings = sortedBookings.filter(b => String(b.needsReview).toLowerCase() === 'true');
             }
 
-            // 應用關鍵字搜尋過濾
             if (searchKw) {
                 sortedBookings = sortedBookings.filter(b => 
                     b.system.toLowerCase().includes(searchKw) || 
@@ -348,9 +444,10 @@
             sortedBookings.forEach(b => {
                 const isRecovered = String(b.isSubmitted).toLowerCase() === 'true';
                 const isClosed = (b.followupStatus === '已訪談完成可用印' || b.followupStatus === '承辦人自行改完後可以用印');
+                const needsReview = String(b.needsReview).toLowerCase() === 'true';
                 const category = systemMapping[b.system]?.category || '';
+                const dashboardNote = b.dashboardNote || '';
 
-                // 決定結案狀態標籤 (訪談電子檔)
                 let closedStatusHtml = '';
                 if (isClosed) {
                     closedStatusHtml = `<span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded">✅ 已結案 (可印)</span>`;
@@ -360,7 +457,22 @@
                     closedStatusHtml = `<span class="px-2 py-1 bg-slate-100 text-slate-500 text-xs font-bold rounded">🟡 訪談處理中</span>`;
                 }
 
-                // 決定紙本繳回狀態互動按鈕
+                // 修改：星星標記狀態 (精簡版)
+                let reviewStatusHtml = '';
+                if (needsReview) {
+                    reviewStatusHtml = `
+                        <button onclick="toggleReviewStatus('${b.id}')" class="px-3 py-1 bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-600 text-[11px] font-bold rounded-full flex items-center mx-auto w-fit gap-1 shadow-sm transition-all cursor-pointer" title="取消標記">
+                            <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 待確認
+                        </button>
+                    `;
+                } else {
+                    reviewStatusHtml = `
+                        <button onclick="toggleReviewStatus('${b.id}')" class="p-1.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-300 hover:text-amber-500 rounded-full flex items-center mx-auto w-fit shadow-sm transition-all cursor-pointer" title="標記為待確認">
+                            <i data-lucide="star" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                }
+
                 let recoveredStatusHtml = '';
                 if (isRecovered) {
                     recoveredStatusHtml = `
@@ -375,6 +487,10 @@
                         </button>
                     `;
                 }
+
+                const noteDisplay = dashboardNote 
+                    ? `<div class="truncate text-slate-600 font-medium" title="${dashboardNote}">${dashboardNote}</div>` 
+                    : `<span class="text-slate-400 font-medium flex items-center gap-1"><i data-lucide="edit-3" class="w-3 h-3"></i> 新增備註</span>`;
 
                 const categoryTag = category ? `<div class="text-[10px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded border border-indigo-100 inline-block mt-1">${category}</div>` : '';
 
@@ -391,21 +507,28 @@
                         <td class="p-4 align-middle whitespace-nowrap">
                             ${closedStatusHtml}
                         </td>
+                        <td class="p-4 align-middle whitespace-nowrap text-center">
+                            ${reviewStatusHtml}
+                        </td>
                         <td class="p-4 align-middle whitespace-nowrap">
                             ${recoveredStatusHtml}
+                        </td>
+                        <td class="p-4 align-middle max-w-[12rem]">
+                            <div onclick="openNoteModal('${b.id}')" class="text-xs p-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded cursor-pointer transition-colors">
+                                ${noteDisplay}
+                            </div>
                         </td>
                     </tr>
                 `;
             });
 
-            // 處理空狀態與查無資料
             if (sortedBookings.length === 0) {
                 if (filterState !== 'all' && !searchKw) {
-                    tbodyHtml = `<tr><td colspan="4" class="p-12 text-center text-slate-400"><i data-lucide="check-circle" class="w-10 h-10 mx-auto mb-3 opacity-50 text-emerald-500"></i><div class="font-bold">目前沒有資料</div></td></tr>`;
+                    tbodyHtml = `<tr><td colspan="6" class="p-12 text-center text-slate-400"><i data-lucide="check-circle" class="w-10 h-10 mx-auto mb-3 opacity-50 text-emerald-500"></i><div class="font-bold">目前沒有資料</div></td></tr>`;
                 } else if (searchKw) {
-                    tbodyHtml = `<tr><td colspan="4" class="p-12 text-center text-slate-400"><i data-lucide="search-x" class="w-10 h-10 mx-auto mb-3 opacity-50 text-slate-400"></i><div class="font-bold">找不到符合「${searchKw}」的系統</div><div class="text-xs mt-1">請嘗試使用其他關鍵字（系統名稱、單位或承辦人）</div></td></tr>`;
+                    tbodyHtml = `<tr><td colspan="6" class="p-12 text-center text-slate-400"><i data-lucide="search-x" class="w-10 h-10 mx-auto mb-3 opacity-50 text-slate-400"></i><div class="font-bold">找不到符合「${searchKw}」的系統</div><div class="text-xs mt-1">請嘗試使用其他關鍵字（系統名稱、單位或承辦人）</div></td></tr>`;
                 } else {
-                    tbodyHtml = `<tr><td colspan="4" class="p-8 text-center text-slate-400"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>目前尚無預約名單資料</td></tr>`;
+                    tbodyHtml = `<tr><td colspan="6" class="p-8 text-center text-slate-400"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>目前尚無預約名單資料</td></tr>`;
                 }
             }
 
@@ -413,12 +536,10 @@
             lucide.createIcons();
         }
 
-        // 綁定搜尋框的即時監聽事件
         document.getElementById('dashboard-search').addEventListener('input', () => {
             calculateAndRender();
         });
 
-        // ✅ 匯出未繳回紙本清單功能
         window.exportUnsubmitted = function() {
             const unsubmittedBookings = bookings.filter(b => String(b.isSubmitted).toLowerCase() !== 'true');
             
@@ -427,18 +548,21 @@
                 return;
             }
 
-            const headers = ['系統名稱', '分類', '單位', '承辦人', '電子檔結案狀態', '紙本繳回狀態'];
+            const headers = ['系統名稱', '分類', '單位', '承辦人', '電子檔結案狀態', '需二次確認', '管理端備註', '紙本繳回狀態'];
             const rows = unsubmittedBookings.map(b => {
                 const categoryStr = systemMapping[b.system]?.category || "";
                 const closedStatus = (b.followupStatus === '已訪談完成可用印' || b.followupStatus === '承辦人自行改完後可以用印') 
                                      ? '已結案(可印)' 
                                      : (b.followupStatus || '未完成');
+                const needsReviewStr = String(b.needsReview).toLowerCase() === 'true' ? '是' : '否';
                 return [
                     `"${(b.system || '').replace(/"/g, '""')}"`,
                     `"${categoryStr.replace(/"/g, '""')}"`,
                     `"${(b.unit || '').replace(/"/g, '""')}"`,
                     `"${(b.contactPerson || '').replace(/"/g, '""')}"`,
                     `"${closedStatus}"`,
+                    `"${needsReviewStr}"`,
+                    `"${(b.dashboardNote || '').replace(/"/g, '""')}"`,
                     `"未繳回"`
                 ];
             });
@@ -456,7 +580,6 @@
             showToast('✅ 匯出成功！');
         };
 
-        // Toast 顯示工具
         let toastTimeout;
         window.showToast = function(message, type = 'success') {
             clearTimeout(toastTimeout);
@@ -480,7 +603,6 @@
             }, 3000);
         };
 
-        // 啟動載入
         lucide.createIcons();
         fetchCloudData();
 
